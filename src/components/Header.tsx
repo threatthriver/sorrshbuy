@@ -1,6 +1,7 @@
 import { Search, ShoppingCart, User, Menu, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Link } from "react-router-dom";
 import CategoriesDropdown from "./CategoriesDropdown";
 
 const Header = () => {
@@ -25,68 +26,68 @@ const Header = () => {
           </div>
 
           {/* Search Bar */}
-          <div className="flex-1 max-w-2xl mx-4">
+          <div className="flex-1 max-w-2xl mx-2 lg:mx-4">
             <div className="relative">
               <Input
                 type="search"
                 placeholder="Search for products, brands and more..."
-                className="w-full pl-4 pr-12 py-3 rounded-full border-0 shadow-card text-foreground bg-white"
+                className="w-full pl-4 pr-12 py-2 lg:py-3 rounded-full border-0 shadow-card text-foreground bg-white text-sm lg:text-base"
               />
               <Button 
                 size="icon" 
-                className="absolute right-1 top-1 h-9 w-9 rounded-full bg-secondary hover:bg-secondary/90"
+                className="absolute right-1 top-1/2 transform -translate-y-1/2 h-7 w-7 lg:h-9 lg:w-9 rounded-full bg-secondary hover:bg-secondary/90"
               >
-                <Search className="h-4 w-4" />
+                <Search className="h-3 w-3 lg:h-4 lg:w-4" />
               </Button>
             </div>
           </div>
 
           {/* User Actions */}
-          <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" className="text-primary-foreground hover:bg-primary-glow/20 relative">
-              <Heart className="h-6 w-6" />
-              <span className="absolute -top-1 -right-1 bg-secondary text-secondary-foreground text-xs rounded-full h-5 w-5 flex items-center justify-center">
+          <div className="flex items-center gap-1 lg:gap-2">
+            <Button variant="ghost" size="icon" className="text-primary-foreground hover:bg-primary-glow/20 relative h-8 w-8 lg:h-10 lg:w-10">
+              <Heart className="h-4 w-4 lg:h-6 lg:w-6" />
+              <span className="absolute -top-1 -right-1 bg-secondary text-secondary-foreground text-xs rounded-full h-4 w-4 lg:h-5 lg:w-5 flex items-center justify-center text-[10px] lg:text-xs">
                 2
               </span>
             </Button>
             
-            <Button variant="ghost" size="icon" className="text-primary-foreground hover:bg-primary-glow/20 relative">
-              <ShoppingCart className="h-6 w-6" />
-              <span className="absolute -top-1 -right-1 bg-secondary text-secondary-foreground text-xs rounded-full h-5 w-5 flex items-center justify-center">
+            <Button variant="ghost" size="icon" className="text-primary-foreground hover:bg-primary-glow/20 relative h-8 w-8 lg:h-10 lg:w-10">
+              <ShoppingCart className="h-4 w-4 lg:h-6 lg:w-6" />
+              <span className="absolute -top-1 -right-1 bg-secondary text-secondary-foreground text-xs rounded-full h-4 w-4 lg:h-5 lg:w-5 flex items-center justify-center text-[10px] lg:text-xs">
                 5
               </span>
             </Button>
             
-            <Button variant="ghost" size="icon" className="text-primary-foreground hover:bg-primary-glow/20">
-              <User className="h-6 w-6" />
+            <Button variant="ghost" size="icon" className="text-primary-foreground hover:bg-primary-glow/20 h-8 w-8 lg:h-10 lg:w-10">
+              <User className="h-4 w-4 lg:h-6 lg:w-6" />
             </Button>
           </div>
         </div>
 
         {/* Navigation */}
-        <nav className="hidden lg:flex items-center gap-8 mt-4 pt-4 border-t border-primary-glow/30">
+        <nav className="hidden lg:flex items-center gap-4 xl:gap-8 mt-4 pt-4 border-t border-primary-glow/30 overflow-x-auto">
           <CategoriesDropdown />
-          <a href="#" className="text-primary-foreground hover:text-orange-200 transition-colors font-medium">
+          <Link to="/shop?category=electronics" className="text-primary-foreground hover:text-orange-200 transition-colors font-medium whitespace-nowrap">
             Electronics
-          </a>
-          <a href="#" className="text-primary-foreground hover:text-orange-200 transition-colors font-medium">
+          </Link>
+          <Link to="/shop?category=fashion" className="text-primary-foreground hover:text-orange-200 transition-colors font-medium whitespace-nowrap">
             Fashion
-          </a>
-          <a href="#" className="text-primary-foreground hover:text-orange-200 transition-colors font-medium">
+          </Link>
+          <Link to="/shop?category=home" className="text-primary-foreground hover:text-orange-200 transition-colors font-medium whitespace-nowrap">
             Home & Kitchen
-          </a>
-          <a href="#" className="text-primary-foreground hover:text-orange-200 transition-colors font-medium">
+          </Link>
+          <Link to="/shop?category=sports" className="text-primary-foreground hover:text-orange-200 transition-colors font-medium whitespace-nowrap">
             Sports
-          </a>
-          <a href="#" className="text-primary-foreground hover:text-orange-200 transition-colors font-medium">
-            Books
-          </a>
-          <a href="#" className="text-primary-foreground hover:text-orange-200 transition-colors font-medium">
+          </Link>
+          <Link to="/trending" className="text-primary-foreground hover:text-orange-200 transition-colors font-medium whitespace-nowrap">
+            Trending
+          </Link>
+          <Link to="/shop?category=beauty" className="text-primary-foreground hover:text-orange-200 transition-colors font-medium whitespace-nowrap">
             Beauty
-          </a>
-          <a href="#" className="text-primary-foreground hover:text-orange-200 transition-colors font-medium">
-            Deals
-          </a>
+          </Link>
+          <Link to="/shop" className="text-primary-foreground hover:text-orange-200 transition-colors font-medium whitespace-nowrap">
+            All Products
+          </Link>
         </nav>
       </div>
     </header>

@@ -15,6 +15,7 @@ import Shipping from "./pages/Shipping";
 import ShippingReturn from "./pages/ShippingReturn";
 import Shop from "./pages/Shop";
 import Terms from "./pages/Terms";
+import Trending from "./pages/Trending";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -38,6 +39,7 @@ const App = () => (
           <Route path="/shipping-return" element={<ShippingReturn />} />
           <Route path="/shop" element={<Shop />} />
           <Route path="/terms" element={<Terms />} />
+          <Route path="/trending" element={<Trending />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

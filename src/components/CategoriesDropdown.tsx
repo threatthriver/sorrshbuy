@@ -11,17 +11,18 @@ import { Link } from "react-router-dom";
 
 const CategoriesDropdown = () => {
   const categories = [
-    { name: "About", path: "/about", icon: "📋" },
-    { name: "Account", path: "/account", icon: "👤" },
-    { name: "Authentication", path: "/authentication", icon: "🔐" },
-    { name: "Blog", path: "/blog", icon: "📝" },
-    { name: "Cart", path: "/cart", icon: "🛒" },
-    { name: "Contact", path: "/contact", icon: "📞" },
-    { name: "Merchant", path: "/merchant", icon: "🏪" },
-    { name: "Shipping", path: "/shipping", icon: "📦" },
-    { name: "Shipping Return", path: "/shipping-return", icon: "↩️" },
-    { name: "Shop", path: "/shop", icon: "🛍️" },
-    { name: "Terms", path: "/terms", icon: "📄" },
+    { name: "Electronics", path: "/shop?category=electronics", icon: "📱" },
+    { name: "Fashion & Clothing", path: "/shop?category=fashion", icon: "👕" },
+    { name: "Home & Kitchen", path: "/shop?category=home", icon: "🏠" },
+    { name: "Sports & Outdoors", path: "/shop?category=sports", icon: "⚽" },
+    { name: "Books & Media", path: "/shop?category=books", icon: "📚" },
+    { name: "Beauty & Personal Care", path: "/shop?category=beauty", icon: "💄" },
+    { name: "Toys & Games", path: "/shop?category=toys", icon: "🎮" },
+    { name: "Automotive", path: "/shop?category=automotive", icon: "🚗" },
+    { name: "Health & Wellness", path: "/shop?category=health", icon: "💊" },
+    { name: "Garden & Outdoor", path: "/shop?category=garden", icon: "🌱" },
+    { name: "Pet Supplies", path: "/shop?category=pets", icon: "🐕" },
+    { name: "Office Supplies", path: "/shop?category=office", icon: "📝" },
   ];
 
   return (
