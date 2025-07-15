@@ -72,6 +72,18 @@ const Header = () => {
                 <User className="h-4 w-4 lg:h-6 lg:w-6" />
               </Button>
             </Link>
+                    {/* Navigation */}
+        <nav className="hidden lg:flex items-center gap-4 xl:gap-8 mt-4 pt-4 border-t border-primary-glow/30 overflow-x-auto">
+          <CategoriesDropdown />
+          <Link to="/shop?category=electronics" className="text-primary-foreground hover:text-orange-200 transition-colors font-medium whitespace-nowrap hover:scale-105 transform duration-200">
+            New Arrivals
+          </Link>
+          <Link to="/trending" className="text-primary-foreground hover:text-orange-200 transition-colors font-medium whitespace-nowrap hover:scale-105 transform duration-200">
+            Trending
+          </Link>
+          <Link to="/shop?category=beauty" className="text-primary-foreground hover:text-orange-200 transition-colors font-medium whitespace-nowrap hover:scale-105 transform duration-200">
+            Shop by Brand
+          </Link>
           </div>
         </div>
         </nav>
