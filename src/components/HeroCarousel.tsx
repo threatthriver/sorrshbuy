@@ -96,7 +96,7 @@ const HeroCarousel = () => {
         variant="ghost"
         size="icon"
         onClick={prevSlide}
-        className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white h-12 w-12"
+        className="absolute z-10 left-4 top-1/2 transform -translate-y-1/2 bg-black/30 backdrop-blur-sm hover:bg-black/50 text-white h-10 w-10 rounded-full transition-all duration-300"
       >
         <ChevronLeft className="h-6 w-6" />
       </Button>
@@ -105,18 +105,21 @@ const HeroCarousel = () => {
         variant="ghost"
         size="icon"
         onClick={nextSlide}
-        className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white h-12 w-12"
+        className="absolute z-10 right-4 top-1/2 transform -translate-y-1/2 bg-black/30 backdrop-blur-sm hover:bg-black/50 text-white h-10 w-10 rounded-full transition-all duration-300"
       >
         <ChevronRight className="h-6 w-6" />
       </Button>
 
       {/* Dots */}
-      <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex gap-2">
+      <div className="absolute z-10 bottom-6 left-1/2 transform -translate-x-1/2 flex gap-2">
         {slides.map((_, index) => (
-          <button
+          <Button
             key={index}
             onClick={() => setCurrentSlide(index)}
-            className={`w-3 h-3 rounded-full transition-all duration-300 ${
+            size="icon"
+            variant="ghost"
+            aria-label={`Go to slide ${index + 1}`}
+            className={`w-3 h-3 rounded-full transition-all duration-300 p-0 ${
               currentSlide === index 
                 ? "bg-white shadow-glow" 
                 : "bg-white/50 hover:bg-white/70"

@@ -5,15 +5,68 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Filter, Search, SlidersHorizontal } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import productPhone from "@/assets/product-phone.jpg";
 import productHeadphones from "@/assets/product-headphones.jpg";
 import productLaptop from "@/assets/product-laptop.jpg";
 import productShoes from "@/assets/product-shoes.jpg";
 
 const Shop = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [sortBy, setSortBy] = useState("featured");
+  const [priceRange, setPriceRange] = useState({ min: '', max: '' });
+  const [selectedRating, setSelectedRating] = useState(0);
+    const [localSearch, setLocalSearch] = useState("");
+
+      const handleRatingChange = (rating: number) => {
+    const newSearchParams = new URLSearchParams(searchParams);
+    const currentRating = searchParams.get('minRating');
+
+    if (currentRating === rating.toString()) {
+      newSearchParams.delete('minRating');
+    } else {
+      newSearchParams.set('minRating', rating.toString());
+    }
+    setSearchParams(newSearchParams);
+  };
+
+    const handleSortChange = (sortValue: string) => {
+    const newSearchParams = new URLSearchParams(searchParams);
+    newSearchParams.set('sortBy', sortValue);
+    setSearchParams(newSearchParams);
+  };
+
+  const handlePriceApply = () => {
+    const newSearchParams = new URLSearchParams(searchParams);
+    if (priceRange.min) newSearchParams.set('minPrice', priceRange.min); else newSearchParams.delete('minPrice');
+    if (priceRange.max) newSearchParams.set('maxPrice', priceRange.max); else newSearchParams.delete('maxPrice');
+    setSearchParams(newSearchParams);
+  };
+
+  const handleCategoryChange = (categoryId: string) => {
+    const newSearchParams = new URLSearchParams(searchParams);
+    if (categoryId === 'all') {
+      newSearchParams.delete('category');
+    } else {
+      newSearchParams.set('category', categoryId);
+    }
+    setSearchParams(newSearchParams);
+  };
+
+  useEffect(() => {
+    const queryFromUrl = searchParams.get('q') || '';
+    const categoryFromUrl = searchParams.get('category') || 'all';
+    setLocalSearch(queryFromUrl);
+    setSelectedCategory(categoryFromUrl);
+    setPriceRange({
+      min: searchParams.get('minPrice') || '',
+      max: searchParams.get('maxPrice') || ''
+    });
+        setSelectedRating(parseInt(searchParams.get('minRating') || '0'));
+    setSortBy(searchParams.get('sortBy') || 'featured');
+  }, [searchParams]);
 
   const categories = [
     { id: "all", name: "All Products", count: 150 },
@@ -112,9 +165,35 @@ const Shop = () => {
     }
   ];
 
-  const filteredProducts = selectedCategory === "all" 
-    ? products 
-    : products.filter(product => product.category === selectedCategory);
+      const filteredProducts = products.filter(product => {
+    const categoryMatch = selectedCategory === 'all' || product.category === selectedCategory;
+    const searchMatch = localSearch === '' || product.name.toLowerCase().includes(localSearch.toLowerCase());
+    
+    const minPrice = parseFloat(priceRange.min);
+    const maxPrice = parseFloat(priceRange.max);
+        const priceMatch = 
+      (isNaN(minPrice) || product.price >= minPrice) && 
+      (isNaN(maxPrice) || product.price <= maxPrice);
+
+        const ratingMatch = selectedRating === 0 || product.rating >= selectedRating;
+
+    return categoryMatch && searchMatch && priceMatch && ratingMatch;
+  });
+
+  const sortedProducts = [...filteredProducts].sort((a, b) => {
+    switch (sortBy) {
+      case 'price-low':
+        return a.price - b.price;
+      case 'price-high':
+        return b.price - a.price;
+      case 'rating':
+        return b.rating - a.rating;
+      case 'newest':
+        return b.id - a.id; // Assuming higher ID is newer
+      default:
+        return 0;
+    }
+  });
 
   return (
     <div className="min-h-screen bg-background">
@@ -123,10 +202,23 @@ const Shop = () => {
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-foreground mb-4">Shop All Products</h1>
-          <p className="text-lg text-muted-foreground">
-            Discover amazing products across all categories
-          </p>
+                    {localSearch ? (
+            <>
+              <h1 className="text-4xl font-bold text-foreground mb-4">
+                Search results for "<span className='text-primary'>{localSearch}</span>"
+              </h1>
+              <p className="text-lg text-muted-foreground">
+                Found {filteredProducts.length} products
+              </p>
+            </>
+          ) : (
+            <>
+              <h1 className="text-4xl font-bold text-foreground mb-4">Shop All Products</h1>
+              <p className="text-lg text-muted-foreground">
+                Discover amazing products across all categories
+              </p>
+            </>
+          )}
         </div>
         
         <div className="grid lg:grid-cols-4 gap-8">
@@ -144,8 +236,10 @@ const Shop = () => {
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
-                    placeholder="Search products..."
-                    className="pl-10"
+                    placeholder="Search products..." 
+                    className="pr-10" 
+                    value={localSearch}
+                    onChange={(e) => setLocalSearch(e.target.value)}
                   />
                 </div>
               </div>
@@ -157,7 +251,7 @@ const Shop = () => {
                   {categories.map((category) => (
                     <button
                       key={category.id}
-                      onClick={() => setSelectedCategory(category.id)}
+                      onClick={() => handleCategoryChange(category.id)}
                       className={`w-full text-left p-3 rounded-lg transition-colors ${
                         selectedCategory === category.id
                           ? "bg-primary text-primary-foreground"
@@ -180,10 +274,10 @@ const Shop = () => {
                 <label className="text-sm font-medium text-foreground mb-3 block">Price Range</label>
                 <div className="space-y-3">
                   <div className="flex gap-2">
-                    <Input placeholder="Min" type="number" />
-                    <Input placeholder="Max" type="number" />
+                    <Input placeholder="Min" type="number" value={priceRange.min} onChange={e => setPriceRange(p => ({ ...p, min: e.target.value }))} />
+                    <Input placeholder="Max" type="number" value={priceRange.max} onChange={e => setPriceRange(p => ({ ...p, max: e.target.value }))} />
                   </div>
-                  <Button variant="outline" className="w-full">
+                  <Button variant="outline" className="w-full" onClick={handlePriceApply}>
                     Apply
                   </Button>
                 </div>
@@ -195,7 +289,7 @@ const Shop = () => {
                 <div className="space-y-2">
                   {[4, 3, 2, 1].map((rating) => (
                     <label key={rating} className="flex items-center space-x-2 cursor-pointer">
-                      <input type="checkbox" className="rounded" />
+                      <input type="checkbox" className="rounded" checked={selectedRating === rating} onChange={() => handleRatingChange(rating)} />
                       <span className="text-sm">{rating}+ Stars</span>
                     </label>
                   ))}
@@ -210,7 +304,7 @@ const Shop = () => {
             <div className="flex justify-between items-center mb-6 p-4 bg-card rounded-xl shadow-card">
               <div className="flex items-center gap-4">
                 <span className="text-muted-foreground">
-                  Showing {filteredProducts.length} products
+                  Showing {sortedProducts.length} products
                 </span>
               </div>
               
@@ -219,7 +313,7 @@ const Shop = () => {
                   <SlidersHorizontal className="h-4 w-4 text-muted-foreground" />
                   <select 
                     value={sortBy}
-                    onChange={(e) => setSortBy(e.target.value)}
+                    onChange={(e) => handleSortChange(e.target.value)}
                     className="bg-background border border-border rounded-lg px-3 py-2 text-sm"
                   >
                     <option value="featured">Featured</option>
@@ -234,7 +328,7 @@ const Shop = () => {
             
             {/* Products Grid */}
             <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-6">
-              {filteredProducts.map((product) => (
+              {sortedProducts.map((product) => (
                 <ProductCard key={product.id} {...product} />
               ))}
             </div>

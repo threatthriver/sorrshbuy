@@ -2,6 +2,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
 import { Badge } from "@/components/ui/badge";
+import { useNavigate } from "react-router-dom";
 import { TrendingUp, Flame, Star, Clock } from "lucide-react";
 import productPhone from "@/assets/product-phone.jpg";
 import productHeadphones from "@/assets/product-headphones.jpg";
@@ -9,6 +10,7 @@ import productLaptop from "@/assets/product-laptop.jpg";
 import productShoes from "@/assets/product-shoes.jpg";
 
 const Trending = () => {
+  const navigate = useNavigate();
   const trendingProducts = [
     {
       id: 1,
@@ -78,6 +80,14 @@ const Trending = () => {
     },
   ];
 
+    const handleCategoryClick = (categoryName: string) => {
+    let categoryId = categoryName.toLowerCase();
+    if (categoryName === "Home & Kitchen") {
+      categoryId = "home";
+    }
+    navigate(`/shop?category=${categoryId}`);
+  };
+
   const trendingCategories = [
     { name: "Electronics", trend: "+45%", icon: "📱", color: "text-blue-500" },
     { name: "Fashion", trend: "+32%", icon: "👕", color: "text-pink-500" },
@@ -121,7 +131,7 @@ const Trending = () => {
           </h2>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
             {trendingCategories.map((category, index) => (
-              <div key={index} className="bg-card p-4 lg:p-6 rounded-xl shadow-card hover:shadow-product transition-all duration-300 hover:-translate-y-1 cursor-pointer">
+              <div key={index} onClick={() => handleCategoryClick(category.name)} className="bg-card p-4 lg:p-6 rounded-xl shadow-card hover:shadow-product transition-all duration-300 hover:-translate-y-1 cursor-pointer">
                 <div className="text-center">
                   <div className="text-3xl lg:text-4xl mb-3">{category.icon}</div>
                   <h3 className="font-semibold text-foreground mb-2 text-sm lg:text-base">{category.name}</h3>

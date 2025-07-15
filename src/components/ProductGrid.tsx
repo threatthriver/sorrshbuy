@@ -1,8 +1,11 @@
 import ProductCard from "./ProductCard";
+import { Product } from "@/types/product";
 import productPhone from "@/assets/product-phone.jpg";
 import productHeadphones from "@/assets/product-headphones.jpg";
 import productLaptop from "@/assets/product-laptop.jpg";
 import productShoes from "@/assets/product-shoes.jpg";
+import { Button } from "@/components/ui/button";
+
 
 const ProductGrid = () => {
   // Sample product data
@@ -107,9 +110,9 @@ const ProductGrid = () => {
         </div>
 
         <div className="text-center mt-12">
-          <button className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3 rounded-lg font-semibold shadow-glow transition-all duration-300 hover:shadow-xl">
+          <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3 rounded-lg font-semibold shadow-glow transition-all duration-300 hover:shadow-xl">
             View All Products
-          </button>
+          </Button>
         </div>
       </div>
     </section>

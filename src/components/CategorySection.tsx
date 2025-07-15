@@ -1,5 +1,4 @@
-import { ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const CategorySection = () => {
   const categories = [
@@ -61,36 +60,27 @@ const CategorySection = () => {
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 lg:gap-6">
           {categories.map((category) => (
-            <div
+            <Link 
+              to={`/shop?category=${category.name.toLowerCase().replace(' & ', '-')}`}
               key={category.id}
-              className="group relative rounded-xl overflow-hidden shadow-card hover:shadow-product transition-all duration-300 hover:-translate-y-2 cursor-pointer"
+              className="group relative rounded-xl overflow-hidden shadow-card hover:shadow-product transition-all duration-300 hover:-translate-y-1 block"
             >
               <div className="aspect-square relative">
                 <img
                   src={category.image}
                   alt={category.name}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />
                 
                 {/* Overlay */}
-                <div className={`absolute inset-0 bg-gradient-to-t ${category.color} opacity-60 group-hover:opacity-70 transition-opacity`} />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent transition-opacity" />
                 
                 {/* Content */}
                 <div className="absolute inset-0 p-4 flex flex-col justify-end text-white">
-                  <h3 className="font-bold text-lg mb-1">{category.name}</h3>
-                  <p className="text-sm text-white/90 mb-3">{category.itemCount}</p>
-                  
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="text-white border-white/50 hover:bg-white/20 hover:border-white opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0"
-                  >
-                    Shop Now
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
+                  <h3 className="font-bold text-lg transition-transform duration-300 group-hover:translate-y-[-4px]">{category.name}</h3>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>

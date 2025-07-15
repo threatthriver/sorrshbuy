@@ -2,6 +2,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, User, Clock } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const Blog = () => {
   const blogPosts = [
@@ -107,9 +108,9 @@ const Blog = () => {
           </div>
           
           <div className="text-center mt-12">
-            <button className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3 rounded-lg font-semibold transition-colors">
+            <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3 rounded-lg font-semibold transition-colors">
               Load More Posts
-            </button>
+            </Button>
           </div>
         </div>
       </div>

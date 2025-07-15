@@ -1,4 +1,3 @@
-import { useRouter } from "next/router";
 import { useState, useEffect } from 'react';
 import { Clock, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -8,7 +7,6 @@ import productHeadphones from "@/assets/product-headphones.jpg";
 import productLaptop from "@/assets/product-laptop.jpg";
 
 const FlashSale = () => {
-  const router = useRouter();
   const [timeLeft, setTimeLeft] = useState({
     hours: 23,
     minutes: 45,
@@ -69,7 +67,7 @@ const FlashSale = () => {
   ];
 
   return (
-    <section className="py-16 bg-gradient-to-r from-red-500/10 via-orange-500/10 to-yellow-500/10">
+    <section className="py-16 bg-gradient-to-r from-primary/10 via-orange-500/10 to-yellow-500/10">
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-8">
@@ -78,48 +76,29 @@ const FlashSale = () => {
             <h2 className="text-3xl lg:text-4xl font-bold text-foreground">
               Flash Sale
             </h2>
-            <Zap className="h-8 w-8 text-orange-500 animate-pulse" />
           </div>
-          
-          {/* Countdown Timer */}
-          <div className="flex items-center justify-center gap-4 mb-6">
-            <Clock className="h-5 w-5 text-muted-foreground" />
-            <div className="flex items-center gap-2">
-              {[
-                { label: 'Hours', value: timeLeft.hours },
-                { label: 'Minutes', value: timeLeft.minutes },
-                { label: 'Seconds', value: timeLeft.seconds }
-              ].map((item, index) => (
-                <div key={item.label} className="flex items-center gap-2">
-                  <div className="bg-primary text-primary-foreground px-3 py-2 rounded-lg font-bold min-w-[3rem] text-center">
-                    {item.value.toString().padStart(2, '0')}
-                  </div>
-                  <span className="text-sm text-muted-foreground">{item.label}</span>
-                  {index < 2 && <span className="text-muted-foreground">:</span>}
-                </div>
-              ))}
-            </div>
+          <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
+            <Clock className="h-4 w-4" />
+            <span>Ends in {timeLeft.hours}h {timeLeft.minutes}m {timeLeft.seconds}s</span>
           </div>
-
-          <p className="text-lg text-muted-foreground">
-            Limited time offers - Don't miss out on these amazing deals!
-          </p>
         </div>
 
+        <p className="text-lg text-muted-foreground">
+          Limited time offers - Don't miss out on these amazing deals!
+        </p>
+
         {/* Flash Sale Products */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           {flashProducts.map((product) => (
             <ProductCard key={product.id} {...product} />
           ))}
         </div>
 
-      <Button
-        onClick={() => router.push("/Trending")} // Capitalized if your file is Trending.tsx
-        size="lg"
-        className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold px-8">
-        View All Flash Deals
-      </Button>
-        </div>
+        <Button
+          size="lg"
+          className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold px-8">
+          View All Flash Deals
+        </Button>
       </div>
     </section>
   );
