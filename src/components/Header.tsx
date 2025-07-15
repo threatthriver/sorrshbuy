@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import CategoriesDropdown from "./CategoriesDropdown";
 import SearchBar from "./SearchBar";
+import ThemeToggle from "./ThemeToggle";
 import { useWishlist } from "@/hooks/useWishlist";
 
 const Header = () => {
@@ -21,7 +22,7 @@ const Header = () => {
     <header className="bg-gradient-primary text-primary-foreground sticky top-0 z-50 shadow-glow">
       {/* Top banner */}
       <div className="bg-primary-glow text-center py-2 text-sm">
-        <p>Free shipping on orders over $99! Limited time offer.</p>
+        <p>Up to Rs.500 Off on Prepaid Purchases - Use Coupon "PREPAID"</p>
       </div>
       
       {/* Main header */}
@@ -46,6 +47,8 @@ const Header = () => {
 
           {/* User Actions */}
           <div className="flex items-center gap-1 lg:gap-2">
+            <ThemeToggle />
+            
             <Button variant="ghost" size="icon" className="text-primary-foreground hover:bg-primary-glow/20 relative h-8 w-8 lg:h-10 lg:w-10">
               <Heart className="h-4 w-4 lg:h-6 lg:w-6" />
               {wishlistCount > 0 && (

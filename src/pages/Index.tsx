@@ -1,7 +1,11 @@
+
 import Header from "@/components/Header";
 import HeroCarousel from "@/components/HeroCarousel";
 import CategorySection from "@/components/CategorySection";
+import FlashSale from "@/components/FlashSale";
 import ProductGrid from "@/components/ProductGrid";
+import TrustBadges from "@/components/TrustBadges";
+import AISupport from "@/components/AISupport";
 import Footer from "@/components/Footer";
 
 const Index = () => {
@@ -13,6 +17,12 @@ const Index = () => {
       <section className="container mx-auto px-4 py-8">
         <HeroCarousel />
       </section>
+
+      {/* Trust Badges */}
+      <TrustBadges />
+
+      {/* Flash Sale Section */}
+      <FlashSale />
 
       {/* Categories */}
       <CategorySection />
@@ -51,6 +61,9 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      {/* AI Support Chat */}
+      <AISupport />
 
       <Footer />
     </div>
