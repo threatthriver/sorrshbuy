@@ -1,4 +1,4 @@
-
+import { useRouter } from "next/router";
 import { useState, useEffect } from 'react';
 import { Clock, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -8,6 +8,7 @@ import productHeadphones from "@/assets/product-headphones.jpg";
 import productLaptop from "@/assets/product-laptop.jpg";
 
 const FlashSale = () => {
+  const router = useRouter();
   const [timeLeft, setTimeLeft] = useState({
     hours: 23,
     minutes: 45,
@@ -112,10 +113,12 @@ const FlashSale = () => {
           ))}
         </div>
 
-        <div className="text-center">
-          <Button size="lg" className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold px-8">
-            View All Flash Deals
-          </Button>
+      <Button
+        onClick={() => router.push("/Trending")} // Capitalized if your file is Trending.tsx
+        size="lg"
+        className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold px-8">
+        View All Flash Deals
+      </Button>
         </div>
       </div>
     </section>
