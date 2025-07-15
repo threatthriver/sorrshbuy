@@ -11,18 +11,24 @@ import { Link } from "react-router-dom";
 
 const CategoriesDropdown = () => {
   const categories = [
-    { name: "Electronics", path: "/shop?category=electronics", icon: "📱" },
-    { name: "Fashion & Clothing", path: "/shop?category=fashion", icon: "👕" },
-    { name: "Home & Kitchen", path: "/shop?category=home", icon: "🏠" },
-    { name: "Sports & Outdoors", path: "/shop?category=sports", icon: "⚽" },
-    { name: "Books & Media", path: "/shop?category=books", icon: "📚" },
-    { name: "Beauty & Personal Care", path: "/shop?category=beauty", icon: "💄" },
-    { name: "Toys & Games", path: "/shop?category=toys", icon: "🎮" },
-    { name: "Automotive", path: "/shop?category=automotive", icon: "🚗" },
-    { name: "Health & Wellness", path: "/shop?category=health", icon: "💊" },
-    { name: "Garden & Outdoor", path: "/shop?category=garden", icon: "🌱" },
-    { name: "Pet Supplies", path: "/shop?category=pets", icon: "🐕" },
-    { name: "Office Supplies", path: "/shop?category=office", icon: "📝" },
+    { name: "Men's Accessories", path: "/shop?category=electronics"},
+    { name: "Women's Accessories", path: "/shop?category=fashion"},
+    { name: "Automotive", path: "/shop?category=home"},
+    { name: "Baby & Toddler", path: "/shop?category=sports"},
+    { name: "Beauty & Health", path: "/shop?category=books"},
+    { name: "Camera Equipment", path: "/shop?category=beauty"},
+    { name: "Computer Peripherals", path: "/shop?category=toys"},
+    { name: "Electronics", path: "/shop?category=automotive"},
+    { name: "Essentials", path: "/shop?category=health"},
+    { name: "Home & Kitchen", path: "/shop?category=garden"},
+    { name: "Instagram Spotlight", path: "/shop?category=pets"},
+    { name: "Luggage & Bags", path: "/shop?category=office"},
+    { name: "SorrshaBuy Finds", path: "/shop?category=office"},
+    { name: "Mobiles & Tabs", path: "/shop?category=office"},
+    { name: "Patio, Lawn and Garden", path: "/shop?category=office"},
+    { name: "Sports & Outdoor", path: "/shop?category=office"},
+    { name: "Toys & Figurines", path: "/shop?category=office"},
+    { name: "Wrist Watches", path: "/shop?category=office"},
   ];
 
   return (
