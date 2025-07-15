@@ -65,6 +65,7 @@ const Header = () => {
 
         {/* Navigation */}
         <nav className="hidden lg:flex items-center gap-8 mt-4 pt-4 border-t border-primary-glow/30">
+          <CategoriesDropdown />
           <a href="#" className="text-primary-foreground hover:text-orange-200 transition-colors font-medium">
             Electronics
           </a>
