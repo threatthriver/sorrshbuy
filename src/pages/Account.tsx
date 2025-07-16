@@ -1,10 +1,10 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent } from "@/components/ui/card";
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { User, CreditCard, Package, Bell, Settings } from "lucide-react";
+import { User, CreditCard, Package, Bell, Settings, LayoutDashboard } from "lucide-react";
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 import DashboardTab from '@/components/account/DashboardTab';
 import ProfileTab from '@/components/account/ProfileTab';
@@ -18,6 +18,7 @@ import shoes from "@/assets/product-shoes.jpg";
 import laptop from "@/assets/product-laptop.jpg";
 
 const Account = () => {
+  const [activeTab, setActiveTab] = useState('dashboard');
   const [profile, setProfile] = useState({
     firstName: 'John',
     lastName: 'Doe',
@@ -42,9 +43,8 @@ const Account = () => {
     { id: 3, message: "Profile updated successfully", time: "3 days ago", read: true },
   ]);
 
-  const handleProfileChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { id, value } = e.target;
-    setProfile(prev => ({ ...prev, [id]: value }));
+  const handleProfileChange = (data: any) => {
+    setProfile(data);
   };
 
   const handleMarkAsRead = (id: number) => {
@@ -81,6 +81,16 @@ const Account = () => {
     { message: "Profile updated successfully", time: "3 days ago" },
   ];
 
+  const navItems = [
+    { value: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { value: 'profile', label: 'Profile', icon: User },
+    { value: 'orders', label: 'Orders', icon: Package },
+    { value: 'addresses', label: 'Addresses', icon: CreditCard },
+    { value: 'payment', label: 'Payment Methods', icon: CreditCard },
+    { value: 'notifications', label: 'Notifications', icon: Bell },
+    { value: 'settings', label: 'Settings', icon: Settings },
+  ];
+
   return (
     <div className="bg-background min-h-screen">
       <Header />
@@ -88,74 +98,52 @@ const Account = () => {
         <div className="max-w-7xl mx-auto">
           <div className="lg:flex lg:items-center lg:justify-between mb-8">
             <div className="flex-1 min-w-0">
-              <h2 className="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
+              <h2 className="text-2xl font-bold leading-7 text-foreground sm:text-3xl sm:truncate">
                 Welcome back, {profile.firstName}!
               </h2>
               <p className="mt-1 text-sm text-muted-foreground">Here's a quick overview of your account.</p>
             </div>
           </div>
 
-          <Tabs defaultValue="dashboard" className="w-full">
-            <div className="overflow-x-auto">
-              <TabsList className="inline-grid w-full grid-cols-2 sm:w-auto sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7">
-                <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
-              <TabsTrigger value="profile">Profile</TabsTrigger>
-              <TabsTrigger value="orders">Orders</TabsTrigger>
-              <TabsTrigger value="addresses">Addresses</TabsTrigger>
-              <TabsTrigger value="payment">Payment</TabsTrigger>
-              <TabsTrigger value="notifications">Notifications</TabsTrigger>
-              <TabsTrigger value="settings">Settings</TabsTrigger>
-            </TabsList>
-            </div>
+          <div className="grid lg:grid-cols-[280px_1fr] gap-8 items-start">
+            {/* Left Sidebar Navigation */}
+            <aside className="hidden lg:block sticky top-24">
+              <nav className="flex flex-col space-y-2">
+                {navItems.map((item) => (
+                  <Button
+                    key={item.value}
+                    variant={activeTab === item.value ? 'default' : 'ghost'}
+                    className="w-full justify-start h-12 text-base"
+                    onClick={() => setActiveTab(item.value)}
+                  >
+                    <item.icon className="mr-3 h-5 w-5" />
+                    {item.label}
+                  </Button>
+                ))}
+              </nav>
+            </aside>
 
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-              <TabsContent value="dashboard" className="mt-6">
-                <DashboardTab recentOrders={recentOrders} savedItems={savedItems} dashboardNotifications={dashboardNotifications} />
-              </TabsContent>
-            </motion.div>
-
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-              <TabsContent value="profile">
-                <ProfileTab profile={profile} handleProfileChange={handleProfileChange} />
-              </TabsContent>
-            </motion.div>
-
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-              <TabsContent value="orders">
-                <OrdersTab recentOrders={recentOrders} />
-              </TabsContent>
-            </motion.div>
-
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-              <TabsContent value="addresses">
-                <AddressesTab addresses={addresses} />
-              </TabsContent>
-            </motion.div>
-
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-              <TabsContent value="payment">
-                <PaymentTab paymentMethods={paymentMethods} />
-              </TabsContent>
-            </motion.div>
-
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-              <TabsContent value="notifications">
-                <NotificationsTab 
-                  notifications={notifications} 
-                  handleMarkAsRead={handleMarkAsRead} 
-                  handleDeleteNotification={handleDeleteNotification}
-                  handleMarkAllAsRead={handleMarkAllAsRead}
-                  handleClearAll={handleClearAll}
-                />
-              </TabsContent>
-            </motion.div>
-
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-              <TabsContent value="settings" className="space-y-6">
-                <SettingsTab />
-              </TabsContent>
-            </motion.div>
-          </Tabs>
+            {/* Main Content */}
+            <main>
+              <motion.div key={activeTab} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+                {activeTab === 'dashboard' && <DashboardTab recentOrders={recentOrders} savedItems={savedItems} dashboardNotifications={dashboardNotifications} />}
+                {activeTab === 'profile' && <ProfileTab profile={profile} handleProfileChange={handleProfileChange} />}
+                {activeTab === 'orders' && <OrdersTab recentOrders={recentOrders} />}
+                {activeTab === 'addresses' && <AddressesTab addresses={addresses} />}
+                {activeTab === 'payment' && <PaymentTab paymentMethods={paymentMethods} />}
+                {activeTab === 'notifications' && 
+                  <NotificationsTab 
+                    notifications={notifications} 
+                    handleMarkAsRead={handleMarkAsRead} 
+                    handleDeleteNotification={handleDeleteNotification}
+                    handleMarkAllAsRead={handleMarkAllAsRead}
+                    handleClearAll={handleClearAll}
+                  />
+                }
+                {activeTab === 'settings' && <SettingsTab />}
+              </motion.div>
+            </main>
+          </div>
         </div>
       </div>
       <Footer />

@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
 const CategorySection = () => {
   const categories = [
@@ -46,8 +47,26 @@ const CategorySection = () => {
     }
   ];
 
+  const containerVariants = {
+    hidden: {},
+    visible: {
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.5, ease: "easeOut" as const },
+    },
+  };
+
   return (
-    <section className="py-16 bg-muted/30">
+    <section className="py-16 bg-gray-100">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
@@ -58,31 +77,33 @@ const CategorySection = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 lg:gap-6">
+        <motion.div 
+          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+        >
           {categories.map((category) => (
-            <Link 
-              to={`/shop?category=${category.name.toLowerCase().replace(' & ', '-')}`}
-              key={category.id}
-              className="group relative rounded-xl overflow-hidden shadow-card hover:shadow-product transition-all duration-300 hover:-translate-y-1 block"
-            >
-              <div className="aspect-square relative">
+            <motion.div key={category.id} variants={itemVariants}>
+              <Link 
+                to={`/shop?category=${category.name.toLowerCase().replace(' & ', '-')}`}
+                className="group relative rounded-lg overflow-hidden shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 block h-48"
+              >
                 <img
                   src={category.image}
                   alt={category.name}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />
-                
-                {/* Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent transition-opacity" />
-                
-                {/* Content */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent" />
                 <div className="absolute inset-0 p-4 flex flex-col justify-end text-white">
-                  <h3 className="font-bold text-lg transition-transform duration-300 group-hover:translate-y-[-4px]">{category.name}</h3>
+                  <h3 className="text-xl font-bold">{category.name}</h3>
+                  <p className="text-sm text-white/90">{category.itemCount}</p>
                 </div>
-              </div>
-            </Link>
+              </Link>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

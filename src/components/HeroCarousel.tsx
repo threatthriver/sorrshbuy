@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import heroBanner1 from "@/assets/hero-banner-1.jpg";
@@ -6,7 +7,7 @@ import heroBanner2 from "@/assets/hero-banner-2.jpg";
 import heroBanner3 from "@/assets/hero-banner-3.jpg";
 
 const HeroCarousel = () => {
-  const [currentSlide, setCurrentSlide] = useState(0);
+  const [[currentSlide, direction], setCurrentSlide] = useState([0, 0]);
 
   const slides = [
     {
@@ -35,97 +36,124 @@ const HeroCarousel = () => {
     },
   ];
 
+  const slideVariants = {
+    initial: (direction: number) => ({
+      x: direction > 0 ? '100%' : '-100%',
+      opacity: 0,
+    }),
+    animate: {
+      x: 0,
+      opacity: 1,
+      transition: { x: { type: 'spring' as const, stiffness: 300, damping: 30 }, opacity: { duration: 0.2 } },
+    },
+    exit: (direction: number) => ({
+      x: direction < 0 ? '100%' : '-100%',
+      opacity: 0,
+      transition: { x: { type: 'spring' as const, stiffness: 300, damping: 30 }, opacity: { duration: 0.2 } },
+    }),
+  };
+
+  const contentVariants = {
+    initial: { opacity: 0, y: 20 },
+    animate: { 
+      opacity: 1, 
+      y: 0,
+      transition: { duration: 0.5, ease: 'easeOut' as const }
+    },
+  };
+
+  const paginate = (newDirection: number) => {
+    setCurrentSlide([currentSlide + newDirection, newDirection]);
+  };
+
+  const activeSlideIndex = ((currentSlide % slides.length) + slides.length) % slides.length;
+
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 5000);
+    const timer = setTimeout(() => paginate(1), 5000);
+    return () => clearTimeout(timer);
+  }, [currentSlide]);
 
-    return () => clearInterval(timer);
-  }, [slides.length]);
-
-  const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % slides.length);
-  };
-
-  const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
-  };
+  const slide = slides[activeSlideIndex];
 
   return (
-    <div className="relative h-[400px] lg:h-[600px] overflow-hidden rounded-xl shadow-product">
-      {/* Slides */}
-      <div 
-        className="flex transition-transform duration-500 ease-in-out h-full"
-        style={{ transform: `translateX(-${currentSlide * 100}%)` }}
-      >
-        {slides.map((slide) => (
-          <div key={slide.id} className="min-w-full relative">
-            <img
-              src={slide.image}
-              alt={slide.title}
-              className="w-full h-full object-cover"
-            />
-            {/* Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/20 to-transparent" />
-            
-            {/* Content */}
-            <div className="absolute left-8 lg:left-16 top-1/2 transform -translate-y-1/2 text-white max-w-md">
-              <p className="text-lg lg:text-xl font-semibold text-secondary mb-2 animate-fade-in-up">
-                {slide.subtitle}
-              </p>
-              <h2 className="text-3xl lg:text-5xl font-bold mb-4 animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
-                {slide.title}
-              </h2>
-              <p className="text-lg lg:text-xl mb-6 text-gray-200 animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
-                {slide.description}
-              </p>
-              <Button 
-                size="lg" 
-                className="bg-secondary hover:bg-secondary/90 text-secondary-foreground font-semibold px-8 py-3 animate-fade-in-up shadow-glow"
-                style={{ animationDelay: "0.3s" }}
-              >
-                {slide.buttonText}
-              </Button>
-            </div>
-          </div>
-        ))}
+    <div className="relative overflow-hidden rounded-xl shadow-product h-[40vh] sm:h-[50vh] md:h-auto md:aspect-[2/1] lg:aspect-[2.8/1]">
+      <AnimatePresence initial={false} custom={direction}>
+        <motion.div
+          key={currentSlide}
+          custom={direction}
+          variants={slideVariants}
+          initial="initial"
+          animate="animate"
+          exit="exit"
+          className="absolute inset-0 w-full h-full"
+        >
+          <img
+            src={slide.image}
+            alt={slide.title}
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/30 to-transparent" />
+        </motion.div>
+      </AnimatePresence>
+
+      {/* Content */}
+      <div className="absolute left-4 md:left-8 lg:left-16 top-1/2 transform -translate-y-1/2 text-white max-w-md z-10">
+        <motion.div key={activeSlideIndex} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: 0.3 }}>
+          <motion.p variants={contentVariants} initial="initial" animate="animate" className="text-lg lg:text-xl font-semibold text-secondary mb-2">
+            {slide.subtitle}
+          </motion.p>
+          <motion.h2 variants={contentVariants} initial="initial" animate="animate" transition={{ delay: 0.1 }} className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
+            {slide.title}
+          </motion.h2>
+          <motion.p variants={contentVariants} initial="initial" animate="animate" transition={{ delay: 0.2 }} className="text-lg lg:text-xl mb-6 text-gray-200">
+            {slide.description}
+          </motion.p>
+          <motion.div variants={contentVariants} initial="initial" animate="animate" transition={{ delay: 0.3 }}>
+            <Button size="lg" className="bg-secondary hover:bg-secondary/90 text-secondary-foreground font-semibold px-8 py-3 shadow-glow">
+              {slide.buttonText}
+            </Button>
+          </motion.div>
+        </motion.div>
       </div>
 
       {/* Navigation Buttons */}
       <Button
         variant="ghost"
         size="icon"
-        onClick={prevSlide}
-        className="absolute z-10 left-4 top-1/2 transform -translate-y-1/2 bg-black/30 backdrop-blur-sm hover:bg-black/50 text-white h-10 w-10 rounded-full transition-all duration-300"
+        onClick={() => paginate(-1)}
+        className="absolute z-20 left-4 top-1/2 -translate-y-1/2 bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white h-10 w-10 rounded-full transition-colors duration-300"
       >
-        <ChevronLeft className="h-6 w-6" />
+        <ChevronLeft />
       </Button>
-      
       <Button
         variant="ghost"
         size="icon"
-        onClick={nextSlide}
-        className="absolute z-10 right-4 top-1/2 transform -translate-y-1/2 bg-black/30 backdrop-blur-sm hover:bg-black/50 text-white h-10 w-10 rounded-full transition-all duration-300"
+        onClick={() => paginate(1)}
+        className="absolute z-20 right-4 top-1/2 -translate-y-1/2 bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white h-10 w-10 rounded-full transition-colors duration-300"
       >
-        <ChevronRight className="h-6 w-6" />
+        <ChevronRight />
       </Button>
 
-      {/* Dots */}
-      <div className="absolute z-10 bottom-6 left-1/2 transform -translate-x-1/2 flex gap-2">
-        {slides.map((_, index) => (
-          <Button
-            key={index}
-            onClick={() => setCurrentSlide(index)}
-            size="icon"
-            variant="ghost"
-            aria-label={`Go to slide ${index + 1}`}
-            className={`w-3 h-3 rounded-full transition-all duration-300 p-0 ${
-              currentSlide === index 
-                ? "bg-white shadow-glow" 
-                : "bg-white/50 hover:bg-white/70"
-            }`}
-          />
-        ))}
+      {/* Pagination & Progress */}
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-3">
+        <div className="flex gap-2">
+          {slides.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentSlide([index, index > activeSlideIndex ? 1 : -1])}
+              className={`w-2 h-2 rounded-full transition-all duration-300 ${activeSlideIndex === index ? 'bg-white scale-125' : 'bg-white/50'}`}
+            />
+          ))}
+        </div>
+        <div className="w-32 h-1 bg-white/20 rounded-full overflow-hidden">
+            <motion.div 
+              key={activeSlideIndex}
+              className="h-full bg-white"
+              initial={{ width: '0%' }}
+              animate={{ width: '100%' }}
+              transition={{ duration: 5, ease: 'linear' }}
+            />
+        </div>
       </div>
     </div>
   );

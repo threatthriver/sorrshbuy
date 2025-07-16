@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { cn } from '@/lib/utils';
 import { useParams } from 'react-router-dom';
 import { Star, ShieldCheck, Truck, Undo2, Plus, Minus, ShoppingCart } from 'lucide-react';
 import Header from '@/components/Header';
@@ -24,22 +25,66 @@ const mockReviews = [
 ];
 
 const mockProducts = [
-    { id: 1, name: 'Latest Smartphone Pro Max', price: 899.99, originalPrice: 1099.99, image: productPhone, rating: 4.8, reviews: 2456, description: 'Experience the future with the most powerful smartphone on the market. Stunning display, pro-grade cameras, and all-day battery life.', category: 'Electronics', stock: 15 },
-    { id: 2, name: 'Premium Wireless Headphones', price: 299.99, originalPrice: 399.99, image: productHeadphones, rating: 4.6, reviews: 1834, description: 'Immerse yourself in pure audio bliss. These headphones offer industry-leading noise cancellation and high-fidelity sound.', category: 'Electronics', stock: 30 },
-    { id: 3, name: 'Ultra-Thin Laptop 15 inch', price: 1299.99, image: productLaptop, rating: 4.9, reviews: 892, description: 'Unleash your creativity with this sleek and powerful laptop. Perfect for professionals and students on the go.', category: 'Electronics', stock: 10 },
-    { id: 4, name: 'Sport Running Shoes', price: 129.99, originalPrice: 179.99, image: productShoes, rating: 4.5, reviews: 3421, description: 'Achieve your personal best with these lightweight and responsive running shoes. Engineered for comfort and performance.', category: 'Fashion', stock: 50 },
-    { id: 5, name: 'Smartphone Pro Max 256GB', price: 799.99, originalPrice: 999.99, image: productPhone, rating: 4.7, reviews: 1567, description: 'A perfect blend of power and style. Capture stunning photos and enjoy seamless performance.', category: 'Electronics', stock: 20 },
-    { id: 6, name: 'Noise Cancelling Headphones', price: 249.99, image: productHeadphones, rating: 4.4, reviews: 967, description: 'Tune out the world and focus on what matters. Exceptional noise cancellation for an immersive listening experience.', category: 'Electronics', stock: 25 },
-    { id: 7, name: 'Gaming Laptop Pro', price: 1899.99, originalPrice: 2199.99, image: productLaptop, rating: 4.8, reviews: 654, description: 'Dominate the competition with this high-performance gaming laptop. Featuring a top-tier GPU and a high-refresh-rate display.', category: 'Electronics', stock: 5 },
-    { id: 8, name: 'Casual Sneakers', price: 89.99, originalPrice: 119.99, image: productShoes, rating: 4.3, reviews: 2108, description: 'The perfect everyday sneakers that combine style and comfort. A versatile addition to any wardrobe.', category: 'Fashion', stock: 100 },
+    { 
+      id: "1", 
+      name: 'Latest Smartphone Pro Max', 
+      price: 899.99, 
+      originalPrice: 1099.99, 
+      images: [productPhone, productHeadphones, productLaptop, productShoes], 
+      rating: 4.8, 
+      reviews: 2456, 
+      description: 'Experience the future with the most powerful smartphone on the market. Stunning display, pro-grade cameras, and all-day battery life.', 
+      category: 'Electronics', 
+      stock: 15,
+      colors: ['#000000', '#FFFFFF', '#FFD700', '#6F7D8C'],
+      sizes: ['128GB', '256GB', '512GB', '1TB']
+    },
+    { 
+      id: "2", 
+      name: 'Premium Wireless Headphones', 
+      price: 299.99, 
+      originalPrice: 399.99, 
+      images: [productHeadphones, productPhone, productLaptop, productShoes], 
+      rating: 4.6, 
+      reviews: 1834, 
+      description: 'Immerse yourself in pure audio bliss. These headphones offer industry-leading noise cancellation and high-fidelity sound.', 
+      category: 'Electronics', 
+      stock: 30,
+      colors: ['#333333', '#F5F5F5', '#87CEEB'],
+    },
+    { 
+      id: "4", 
+      name: 'Sport Running Shoes', 
+      price: 129.99, 
+      originalPrice: 179.99, 
+      images: [productShoes, productPhone, productLaptop, productHeadphones], 
+      rating: 4.5, 
+      reviews: 3421, 
+      description: 'Achieve your personal best with these lightweight and responsive running shoes. Engineered for comfort and performance.', 
+      category: 'Fashion', 
+      stock: 50,
+      sizes: ['8', '9', '10', '11', '12']
+    },
+    // Add more products as needed, ensuring they have an `images` array
 ];
 
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
   const { addToCart } = useCart();
   const [quantity, setQuantity] = useState(1);
+  const [selectedImage, setSelectedImage] = useState('');
+  const [selectedColor, setSelectedColor] = useState('');
+  const [selectedSize, setSelectedSize] = useState('');
 
-  const product = mockProducts.find(p => p.id === parseInt(id || ''));
+  const product = mockProducts.find(p => p.id === id);
+
+  useState(() => {
+    if (product) {
+      setSelectedImage(product.images[0]);
+      if (product.colors) setSelectedColor(product.colors[0]);
+      if (product.sizes) setSelectedSize(product.sizes[0]);
+    }
+  });
 
   if (!product) {
     return <div>Product not found</div>; // Or a proper 404 page
@@ -55,8 +100,24 @@ const ProductDetail = () => {
       <main className="container mx-auto px-4 py-12">
         <div className="grid md:grid-cols-2 gap-12">
           {/* Product Image Gallery */}
-          <div>
-            <img src={product.image} alt={product.name} className="w-full rounded-lg shadow-lg" />
+          <div className="flex flex-col gap-4">
+            <div className="w-full h-[400px] lg:h-[500px] bg-card rounded-xl shadow-lg flex items-center justify-center overflow-hidden">
+              <img src={selectedImage} alt={product.name} className="w-full h-full object-contain transition-transform duration-300 ease-in-out hover:scale-105" />
+            </div>
+            <div className="grid grid-cols-4 gap-4">
+              {product.images.map((image, index) => (
+                <button
+                  key={index}
+                  onClick={() => setSelectedImage(image)}
+                  className={cn(
+                    'w-full h-24 bg-card rounded-lg flex items-center justify-center overflow-hidden transition-all duration-200',
+                    selectedImage === image ? 'ring-2 ring-primary ring-offset-2 ring-offset-background' : 'hover:ring-1 hover:ring-primary/50'
+                  )}
+                >
+                  <img src={image} alt={`${product.name} thumbnail ${index + 1}`} className="h-full w-full object-cover" />
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Product Info */}
@@ -77,18 +138,59 @@ const ProductDetail = () => {
               )}
             </div>
 
+            {/* Color Options */}
+            {product.colors && (
+              <div className="mt-4">
+                <h3 className="text-sm font-medium text-foreground mb-2">Color</h3>
+                <div className="flex items-center gap-2">
+                  {product.colors.map(color => (
+                    <button 
+                      key={color}
+                      onClick={() => setSelectedColor(color)}
+                      className={cn(
+                        'h-8 w-8 rounded-full border-2 transition-all',
+                        selectedColor === color ? 'ring-2 ring-offset-2 ring-offset-background ring-primary' : 'border-border'
+                      )}
+                      style={{ backgroundColor: color }}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Size Options */}
+            {product.sizes && (
+              <div className="mt-4">
+                <h3 className="text-sm font-medium text-foreground mb-2">Size</h3>
+                <div className="flex flex-wrap items-center gap-2">
+                  {product.sizes.map(size => (
+                    <Button 
+                      key={size}
+                      variant={selectedSize === size ? 'default' : 'outline'}
+                      onClick={() => setSelectedSize(size)}
+                    >
+                      {size}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+            )}
+
             
             {/* Quantity and Add to Cart */}
-            <div className="flex items-center gap-4 mt-4">
-              <div className="flex items-center border rounded-lg">
-                <Button variant="ghost" size="icon" onClick={() => setQuantity(q => Math.max(1, q - 1))}><Minus className="h-4 w-4" /></Button>
-                <span className="w-12 text-center font-bold">{quantity}</span>
-                <Button variant="ghost" size="icon" onClick={() => setQuantity(q => q + 1)}><Plus className="h-4 w-4" /></Button>
+            <div className="mt-6 bg-muted/50 p-4 rounded-lg">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="flex items-center justify-center border rounded-lg">
+                  <Button variant="ghost" size="icon" onClick={() => setQuantity(q => Math.max(1, q - 1))}><Minus className="h-4 w-4" /></Button>
+                  <span className="w-12 text-center font-bold text-lg">{quantity}</span>
+                  <Button variant="ghost" size="icon" onClick={() => setQuantity(q => q + 1)}><Plus className="h-4 w-4" /></Button>
+                </div>
+                <Button size="lg" className="w-full shadow-lg" onClick={handleAddToCart}>
+                  <ShoppingCart className="h-5 w-5 mr-2" />
+                  Add to Cart
+                </Button>
               </div>
-              <Button size="lg" className="flex-grow shadow-lg" onClick={handleAddToCart}>
-                <ShoppingCart className="h-5 w-5 mr-2" />
-                Add to Cart
-              </Button>
+              <Button size="lg" variant="outline" className="w-full mt-4">Buy Now</Button>
             </div>
 
             {/* Assurances */}

@@ -33,32 +33,32 @@ const Index = () => {
           <FeatureAnnouncement />
         </AnimatedSection>
         <AnimatedSection>
-          <section className="py-16 bg-gradient-hero">
-            <div className="container mx-auto px-4 text-center">
-              <h2 className="text-3xl lg:text-4xl font-bold text-white mb-6">
+          <section className="py-16 bg-muted/40">
+            <div className="container mx-auto px-4">
+              <h2 className="text-3xl lg:text-4xl font-bold text-center text-foreground mb-12">
                 Why Choose SorrshaBuy?
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div className="text-white">
-                  <div className="bg-white/20 backdrop-blur-sm rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                    <Truck className="w-8 h-8 text-white" />
+                <div className="bg-card p-8 rounded-xl shadow-sm text-center transition-transform hover:-translate-y-2">
+                  <div className="bg-primary/10 text-primary rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                    <Truck className="w-8 h-8" />
                   </div>
-                  <h3 className="text-xl font-semibold mb-2">Fast Shipping</h3>
-                  <p className="text-white/80">Get your orders delivered in record time</p>
+                  <h3 className="text-xl font-semibold mb-2 text-foreground">Fast Shipping</h3>
+                  <p className="text-muted-foreground">Get your orders delivered in record time</p>
                 </div>
-                <div className="text-white">
-                  <div className="bg-white/20 backdrop-blur-sm rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                    <Lock className="w-8 h-8 text-white" />
+                <div className="bg-card p-8 rounded-xl shadow-sm text-center transition-transform hover:-translate-y-2">
+                  <div className="bg-primary/10 text-primary rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                    <Lock className="w-8 h-8" />
                   </div>
-                  <h3 className="text-xl font-semibold mb-2">Secure Payment</h3>
-                  <p className="text-white/80">100% secure payment processing</p>
+                  <h3 className="text-xl font-semibold mb-2 text-foreground">Secure Payment</h3>
+                  <p className="text-muted-foreground">100% secure payment processing</p>
                 </div>
-                <div className="text-white">
-                  <div className="bg-white/20 backdrop-blur-sm rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                    <Undo2 className="w-8 h-8 text-white" />
+                <div className="bg-card p-8 rounded-xl shadow-sm text-center transition-transform hover:-translate-y-2">
+                  <div className="bg-primary/10 text-primary rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                    <Undo2 className="w-8 h-8" />
                   </div>
-                  <h3 className="text-xl font-semibold mb-2">Easy Returns</h3>
-                  <p className="text-white/80">30-day hassle-free returns</p>
+                  <h3 className="text-xl font-semibold mb-2 text-foreground">Easy Returns</h3>
+                  <p className="text-muted-foreground">30-day hassle-free returns</p>
                 </div>
               </div>
             </div>

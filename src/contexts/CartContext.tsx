@@ -1,6 +1,30 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext, createContext } from 'react';
+import { toast } from 'sonner';
 import { Product } from '@/types/product';
-import { CartContext, type CartItem } from './cart-context-definition';
+
+export interface CartItem extends Product {
+  quantity: number;
+}
+
+interface CartContextType {
+  cartItems: CartItem[];
+  addToCart: (product: Product, quantity?: number) => Promise<void>;
+  removeFromCart: (id: string) => void;
+  updateQuantity: (id: string, quantity: number) => void;
+  clearCart: () => void;
+  isLoading: boolean;
+  error: string | null;
+}
+
+const CartContext = createContext<CartContextType | undefined>(undefined);
+
+export const useCart = () => {
+  const context = useContext(CartContext);
+  if (context === undefined) {
+    throw new Error('useCart must be used within a CartProvider');
+  }
+  return context;
+};
 
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
@@ -24,9 +48,11 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       const existingItem = cartItems.find(item => item.id === product.id);
       
       if (existingItem) {
-        updateQuantity(product.id, existingItem.quantity + quantity);
+        updateQuantity(existingItem.id, existingItem.quantity + quantity);
       } else {
-        setCartItems([...cartItems, { ...product, quantity }]);
+        const newCartItems = [...cartItems, { ...product, quantity }];
+        setCartItems(newCartItems);
+        toast.success(`${product.name} added to cart!`);
       }
     } catch (err) {
       setError('Failed to add item to cart');
@@ -35,30 +61,44 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  const removeFromCart = (id: number) => {
+  const removeFromCart = (id: string) => {
     try {
+      const itemToRemove = cartItems.find(item => item.id === id);
       setCartItems(cartItems.filter(item => item.id !== id));
+      if (itemToRemove) {
+        toast.error(`${itemToRemove.name} removed from cart.`);
+      }
     } catch (err) {
       setError('Failed to remove item from cart');
+      toast.error('Failed to remove item from cart.');
     }
   };
 
-  const updateQuantity = (id: number, quantity: number) => {
-    if (quantity < 1) return;
+  const updateQuantity = (id: string, quantity: number) => {
+    if (quantity < 1) {
+      removeFromCart(id);
+      return;
+    }
     try {
       setCartItems(cartItems.map(item => 
         item.id === id ? { ...item, quantity } : item
       ));
+      // Optional: toast notification for quantity update can be noisy. 
+      // Consider if this is truly needed or if visual feedback in the cart is enough.
+      // toast.info(`Quantity updated.`); 
     } catch (err) {
       setError('Failed to update quantity');
+      toast.error('Failed to update quantity.');
     }
   };
 
   const clearCart = () => {
     try {
       setCartItems([]);
-    } catch (err) {
+      toast.success('Cart has been cleared.');
+    } catch (err) { 
       setError('Failed to clear cart');
+      toast.error('Failed to clear cart.');
     }
   };
 

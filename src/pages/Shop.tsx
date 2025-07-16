@@ -3,348 +3,186 @@ import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { Filter, Search, SlidersHorizontal } from "lucide-react";
-import { useState, useEffect } from "react";
+import { Filter, Search } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useState, useEffect, useMemo } from "react";
+import CategoryHeader from "@/components/CategoryHeader";
 import { useSearchParams } from "react-router-dom";
-import productPhone from "@/assets/product-phone.jpg";
-import productHeadphones from "@/assets/product-headphones.jpg";
-import productLaptop from "@/assets/product-laptop.jpg";
-import productShoes from "@/assets/product-shoes.jpg";
+import { products, categories } from "@/data/products";
+import ShopSidebar from "@/components/ShopSidebar";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 
 const Shop = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [selectedCategory, setSelectedCategory] = useState("all");
-  const [sortBy, setSortBy] = useState("featured");
-  const [priceRange, setPriceRange] = useState({ min: '', max: '' });
-  const [selectedRating, setSelectedRating] = useState(0);
-    const [localSearch, setLocalSearch] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
 
-      const handleRatingChange = (rating: number) => {
+  // Filters state
+  const selectedCategory = useMemo(() => searchParams.get('category') || 'all', [searchParams]);
+  const sortBy = useMemo(() => searchParams.get('sortBy') || 'featured', [searchParams]);
+  const priceRange = useMemo(() => {
+    const min = searchParams.get('minPrice');
+    const max = searchParams.get('maxPrice');
+    return [min ? parseInt(min) : 0, max ? parseInt(max) : 2000] as [number, number];
+  }, [searchParams]);
+  const selectedRating = useMemo(() => parseInt(searchParams.get('minRating') || '0'), [searchParams]);
+  const localSearch = useMemo(() => searchParams.get('q') || '', [searchParams]);
+
+  const handleFilterChange = (key: string, value: string | null) => {
     const newSearchParams = new URLSearchParams(searchParams);
+    if (value === null || (key === 'category' && value === 'all')) {
+      newSearchParams.delete(key);
+    } else {
+      newSearchParams.set(key, value);
+    }
+    setSearchParams(newSearchParams, { replace: true });
+  };
+
+  const handlePriceChange = (value: [number, number]) => {
+    const newSearchParams = new URLSearchParams(searchParams);
+    newSearchParams.set('minPrice', value[0].toString());
+    newSearchParams.set('maxPrice', value[1].toString());
+    setSearchParams(newSearchParams, { replace: true });
+  }
+
+  const handleRatingChange = (rating: number) => {
     const currentRating = searchParams.get('minRating');
-
-    if (currentRating === rating.toString()) {
-      newSearchParams.delete('minRating');
-    } else {
-      newSearchParams.set('minRating', rating.toString());
-    }
-    setSearchParams(newSearchParams);
+    handleFilterChange('minRating', currentRating === rating.toString() ? null : rating.toString());
   };
-
-    const handleSortChange = (sortValue: string) => {
-    const newSearchParams = new URLSearchParams(searchParams);
-    newSearchParams.set('sortBy', sortValue);
-    setSearchParams(newSearchParams);
-  };
-
-  const handlePriceApply = () => {
-    const newSearchParams = new URLSearchParams(searchParams);
-    if (priceRange.min) newSearchParams.set('minPrice', priceRange.min); else newSearchParams.delete('minPrice');
-    if (priceRange.max) newSearchParams.set('maxPrice', priceRange.max); else newSearchParams.delete('maxPrice');
-    setSearchParams(newSearchParams);
-  };
-
-  const handleCategoryChange = (categoryId: string) => {
-    const newSearchParams = new URLSearchParams(searchParams);
-    if (categoryId === 'all') {
-      newSearchParams.delete('category');
-    } else {
-      newSearchParams.set('category', categoryId);
-    }
-    setSearchParams(newSearchParams);
-  };
+  
+  const handleSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const searchValue = formData.get('search') as string;
+    handleFilterChange('q', searchValue || null);
+  }
 
   useEffect(() => {
-    const queryFromUrl = searchParams.get('q') || '';
-    const categoryFromUrl = searchParams.get('category') || 'all';
-    setLocalSearch(queryFromUrl);
-    setSelectedCategory(categoryFromUrl);
-    setPriceRange({
-      min: searchParams.get('minPrice') || '',
-      max: searchParams.get('maxPrice') || ''
-    });
-        setSelectedRating(parseInt(searchParams.get('minRating') || '0'));
-    setSortBy(searchParams.get('sortBy') || 'featured');
+    setIsLoading(true);
+    const timer = setTimeout(() => setIsLoading(false), 500); // Simulate loading
+    return () => clearTimeout(timer);
   }, [searchParams]);
 
-  const categories = [
-    { id: "all", name: "All Products", count: 150 },
-    { id: "electronics", name: "Electronics", count: 45 },
-    { id: "fashion", name: "Fashion", count: 67 },
-    { id: "home", name: "Home & Kitchen", count: 23 },
-    { id: "sports", name: "Sports", count: 15 }
-  ];
-
-  const products = [
-    {
-      id: 1,
-      name: "Latest Smartphone Pro Max",
-      price: 899.99,
-      originalPrice: 1099.99,
-      image: productPhone,
-      rating: 4.8,
-      reviews: 2456,
-      badge: "Best Seller",
-      isNew: false,
-      category: "electronics"
-    },
-    {
-      id: 2,
-      name: "Premium Wireless Headphones",
-      price: 299.99,
-      originalPrice: 399.99,
-      image: productHeadphones,
-      rating: 4.6,
-      reviews: 1834,
-      isNew: true,
-      category: "electronics"
-    },
-    {
-      id: 3,
-      name: "Ultra-Thin Laptop 15 inch",
-      price: 1299.99,
-      image: productLaptop,
-      rating: 4.9,
-      reviews: 892,
-      badge: "Editor's Choice",
-      category: "electronics"
-    },
-    {
-      id: 4,
-      name: "Sport Running Shoes",
-      price: 129.99,
-      originalPrice: 179.99,
-      image: productShoes,
-      rating: 4.5,
-      reviews: 3421,
-      isNew: true,
-      category: "fashion"
-    },
-    {
-      id: 5,
-      name: "Wireless Bluetooth Earbuds",
-      price: 159.99,
-      originalPrice: 199.99,
-      image: productHeadphones,
-      rating: 4.4,
-      reviews: 1567,
-      badge: "Hot Deal",
-      category: "electronics"
-    },
-    {
-      id: 6,
-      name: "Professional Gaming Laptop",
-      price: 1899.99,
-      image: productLaptop,
-      rating: 4.7,
-      reviews: 743,
-      isNew: true,
-      category: "electronics"
-    },
-    {
-      id: 7,
-      name: "Casual Sneakers",
-      price: 89.99,
-      originalPrice: 119.99,
-      image: productShoes,
-      rating: 4.3,
-      reviews: 2108,
-      category: "fashion"
-    },
-    {
-      id: 8,
-      name: "Smartphone Pro 128GB",
-      price: 699.99,
-      originalPrice: 799.99,
-      image: productPhone,
-      rating: 4.6,
-      reviews: 1892,
-      badge: "Popular",
-      category: "electronics"
-    }
-  ];
-
-      const filteredProducts = products.filter(product => {
+  const filteredProducts = useMemo(() => products.filter(product => {
     const categoryMatch = selectedCategory === 'all' || product.category === selectedCategory;
     const searchMatch = localSearch === '' || product.name.toLowerCase().includes(localSearch.toLowerCase());
-    
-    const minPrice = parseFloat(priceRange.min);
-    const maxPrice = parseFloat(priceRange.max);
-        const priceMatch = 
-      (isNaN(minPrice) || product.price >= minPrice) && 
-      (isNaN(maxPrice) || product.price <= maxPrice);
-
-        const ratingMatch = selectedRating === 0 || product.rating >= selectedRating;
-
+    const priceMatch = product.price >= priceRange[0] && product.price <= priceRange[1];
+    const ratingMatch = selectedRating === 0 || (product.rating && product.rating >= selectedRating);
     return categoryMatch && searchMatch && priceMatch && ratingMatch;
-  });
+  }), [selectedCategory, localSearch, priceRange, selectedRating]);
 
-  const sortedProducts = [...filteredProducts].sort((a, b) => {
+  const currentCategory = useMemo(() => categories.find(cat => cat.id === selectedCategory) || categories[0], [selectedCategory]);
+  const categoryDescription = `Browse our curated selection of ${currentCategory.name.toLowerCase()}. Find the latest trends and top-rated items.`;
+
+  const sortedProducts = useMemo(() => [...filteredProducts].sort((a, b) => {
     switch (sortBy) {
-      case 'price-low':
+      case 'price-asc':
         return a.price - b.price;
-      case 'price-high':
+      case 'price-desc':
         return b.price - a.price;
       case 'rating':
-        return b.rating - a.rating;
+        return (b.rating || 0) - (a.rating || 0);
       case 'newest':
-        return b.id - a.id; // Assuming higher ID is newer
+        return b.id.localeCompare(a.id); 
       default:
         return 0;
     }
-  });
+  }), [filteredProducts, sortBy]);
+
+  const sidebarProps = {
+    categories,
+    selectedCategory,
+    onCategoryChange: (id: string) => handleFilterChange('category', id),
+    priceRange,
+    onPriceChange: handlePriceChange,
+    selectedRating,
+    onRatingChange: handleRatingChange,
+  };
 
   return (
-    <div className="min-h-screen bg-background">
+    <>
       <Header />
-      
-      <div className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="mb-8">
-                    {localSearch ? (
-            <>
-              <h1 className="text-4xl font-bold text-foreground mb-4">
-                Search results for "<span className='text-primary'>{localSearch}</span>"
-              </h1>
-              <p className="text-lg text-muted-foreground">
-                Found {filteredProducts.length} products
-              </p>
-            </>
-          ) : (
-            <>
-              <h1 className="text-4xl font-bold text-foreground mb-4">Shop All Products</h1>
-              <p className="text-lg text-muted-foreground">
-                Discover amazing products across all categories
-              </p>
-            </>
-          )}
-        </div>
-        
-        <div className="grid lg:grid-cols-4 gap-8">
-          {/* Filters Sidebar */}
-          <div className="lg:col-span-1">
-            <div className="bg-card p-6 rounded-xl shadow-card sticky top-8">
-              <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
-                <Filter className="h-5 w-5" />
-                Filters
-              </h3>
-              
-              {/* Search */}
-              <div className="mb-6">
-                <label className="text-sm font-medium text-foreground mb-2 block">Search</label>
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    placeholder="Search products..." 
-                    className="pr-10" 
-                    value={localSearch}
-                    onChange={(e) => setLocalSearch(e.target.value)}
-                  />
-                </div>
-              </div>
-              
-              {/* Categories */}
-              <div className="mb-6">
-                <label className="text-sm font-medium text-foreground mb-3 block">Categories</label>
-                <div className="space-y-2">
-                  {categories.map((category) => (
-                    <button
-                      key={category.id}
-                      onClick={() => handleCategoryChange(category.id)}
-                      className={`w-full text-left p-3 rounded-lg transition-colors ${
-                        selectedCategory === category.id
-                          ? "bg-primary text-primary-foreground"
-                          : "hover:bg-muted"
-                      }`}
-                    >
-                      <div className="flex justify-between items-center">
-                        <span>{category.name}</span>
-                        <Badge variant="outline" className="text-xs">
-                          {category.count}
-                        </Badge>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              </div>
-              
-              {/* Price Range */}
-              <div className="mb-6">
-                <label className="text-sm font-medium text-foreground mb-3 block">Price Range</label>
-                <div className="space-y-3">
-                  <div className="flex gap-2">
-                    <Input placeholder="Min" type="number" value={priceRange.min} onChange={e => setPriceRange(p => ({ ...p, min: e.target.value }))} />
-                    <Input placeholder="Max" type="number" value={priceRange.max} onChange={e => setPriceRange(p => ({ ...p, max: e.target.value }))} />
-                  </div>
-                  <Button variant="outline" className="w-full" onClick={handlePriceApply}>
-                    Apply
-                  </Button>
-                </div>
-              </div>
-              
-              {/* Rating Filter */}
-              <div className="mb-6">
-                <label className="text-sm font-medium text-foreground mb-3 block">Rating</label>
-                <div className="space-y-2">
-                  {[4, 3, 2, 1].map((rating) => (
-                    <label key={rating} className="flex items-center space-x-2 cursor-pointer">
-                      <input type="checkbox" className="rounded" checked={selectedRating === rating} onChange={() => handleRatingChange(rating)} />
-                      <span className="text-sm">{rating}+ Stars</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          {/* Products Grid */}
+      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <CategoryHeader 
+          title={currentCategory.name}
+          description={categoryDescription}
+          productCount={filteredProducts.length}
+        />
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          {/* Sidebar */}
+          <ShopSidebar {...sidebarProps} className="hidden lg:block" />
+
+          {/* Main content */}
           <div className="lg:col-span-3">
-            {/* Sort and View Options */}
-            <div className="flex justify-between items-center mb-6 p-4 bg-card rounded-xl shadow-card">
-              <div className="flex items-center gap-4">
-                <span className="text-muted-foreground">
-                  Showing {sortedProducts.length} products
-                </span>
-              </div>
-              
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-2">
-                  <SlidersHorizontal className="h-4 w-4 text-muted-foreground" />
-                  <select 
-                    value={sortBy}
-                    onChange={(e) => handleSortChange(e.target.value)}
-                    className="bg-background border border-border rounded-lg px-3 py-2 text-sm"
-                  >
-                    <option value="featured">Featured</option>
-                    <option value="price-low">Price: Low to High</option>
-                    <option value="price-high">Price: High to Low</option>
-                    <option value="rating">Customer Rating</option>
-                    <option value="newest">Newest First</option>
-                  </select>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6">
+                <form onSubmit={handleSearchSubmit} className="relative w-full sm:w-auto mb-4 sm:mb-0">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input 
+                    name="search"
+                    placeholder="Search products..."
+                    className="pl-10 w-full sm:w-64"
+                    defaultValue={localSearch}
+                  />
+                </form>
+                <div className="flex items-center gap-4 self-end sm:self-center">
+                  <Select value={sortBy} onValueChange={(val) => handleFilterChange('sortBy', val)}>
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder="Sort by" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="featured">Featured</SelectItem>
+                      <SelectItem value="newest">Newest</SelectItem>
+                      <SelectItem value="price-asc">Price: Low to High</SelectItem>
+                      <SelectItem value="price-desc">Price: High to Low</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
+                    <SheetTrigger asChild>
+                      <Button variant="outline" className="lg:hidden">
+                        <Filter className="h-4 w-4 mr-2" />
+                        Filters
+                      </Button>
+                    </SheetTrigger>
+                    <SheetContent className="w-[320px] sm:w-[380px] flex flex-col">
+                      <SheetHeader>
+                        <SheetTitle>Filters</SheetTitle>
+                      </SheetHeader>
+                      <div className="overflow-y-auto flex-grow pr-6 -mr-6">
+                        <ShopSidebar {...sidebarProps} />
+                      </div>
+                      <Button onClick={() => setIsSheetOpen(false)} className="mt-4">Apply Filters</Button>
+                    </SheetContent>
+                  </Sheet>
                 </div>
               </div>
-            </div>
-            
-            {/* Products Grid */}
-            <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-6">
-              {sortedProducts.map((product) => (
-                <ProductCard key={product.id} {...product} />
-              ))}
-            </div>
-            
-            {/* Load More */}
-            <div className="text-center mt-12">
-              <Button variant="outline" size="lg" className="px-8">
-                Load More Products
-              </Button>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-x-6 gap-y-10">
+              {isLoading 
+                ? Array.from({ length: 6 }).map((_, index) => (
+                    <div key={index} className="space-y-3">
+                      <Skeleton className="h-[380px] rounded-lg" />
+                      <Skeleton className="h-5 w-3/4 mt-4" />
+                      <Skeleton className="h-4 w-1/2" />
+                      <Skeleton className="h-5 w-1/4" />
+                    </div>
+                  ))
+                : sortedProducts.map(product => (
+                    <ProductCard key={product.id} {...product} />
+                  ))
+              }
             </div>
           </div>
         </div>
-      </div>
-      
+      </main>
       <Footer />
-    </div>
+    </>
   );
 };
 

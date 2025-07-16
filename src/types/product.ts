@@ -1,9 +1,10 @@
 export interface Product {
-  id: number;
+  id: string;
   name: string;
   price: number;
   originalPrice?: number;
-  image: string;
+  image?: string; // Keep for components like ProductCard
+  images?: string[]; // For product detail gallery
   rating?: number;
   reviews?: number;
   badge?: string;
@@ -12,4 +13,6 @@ export interface Product {
   category?: string;
   stock?: number;
   brand?: string;
+  colors?: string[];
+  sizes?: string[];
 }

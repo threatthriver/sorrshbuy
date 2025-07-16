@@ -2,7 +2,7 @@
 import { ShoppingCart, User, Menu, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import CategoriesDropdown from "./CategoriesDropdown";
 import SearchBar from "./SearchBar";
 import MobileMenu from "./MobileMenu";
@@ -14,6 +14,21 @@ const Header = () => {
   const navigate = useNavigate();
   const { wishlistCount } = useWishlist();
   const { cartItems } = useCart();
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    let isMounted = true;
+    const handleScroll = () => {
+      if (isMounted) {
+        setIsScrolled(window.scrollY > 10);
+      }
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      isMounted = false;
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   const handleSearch = (query: string) => {
     if (query.trim()) {
@@ -21,8 +36,16 @@ const Header = () => {
     }
   };
 
+  const headerClasses = `sticky top-0 z-50 transition-all duration-300 bg-background/95 backdrop-blur-sm shadow-md border-b border-border/20`;
+
+  const navLinkClasses = `transition-colors font-medium whitespace-nowrap hover:scale-105 transform duration-200 text-foreground hover:text-primary`;
+
+  const logoClasses = `text-2xl font-bold bg-clip-text text-transparent hover:scale-105 transition-transform cursor-pointer bg-gradient-to-r from-primary to-orange-500`;
+
+  const iconButtonClasses = `relative h-9 w-9 transition-colors text-foreground hover:bg-muted`;
+
   return (
-    <header className="bg-gradient-to-r from-primary to-primary/90 text-primary-foreground sticky top-0 z-50 shadow-lg">
+    <header className={headerClasses}>
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between gap-4">
           {/* Logo & Mobile Menu */}
@@ -31,7 +54,7 @@ const Header = () => {
               <MobileMenu />
             </div>
             <Link to="/">
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-white to-orange-200 bg-clip-text text-transparent hover:scale-105 transition-transform cursor-pointer">
+              <h1 className={logoClasses}>
                 SorrshaBuy
               </h1>
             </Link>
@@ -39,14 +62,14 @@ const Header = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex flex-1 items-center justify-center gap-4 xl:gap-6">
-            <CategoriesDropdown />
-            <Link to="/shop?category=electronics" className="text-primary-foreground hover:text-orange-200 transition-colors font-medium whitespace-nowrap hover:scale-105 transform duration-200">
+            <CategoriesDropdown isScrolled={isScrolled} />
+            <Link to="/shop?category=electronics" className={navLinkClasses}>
               New Arrivals
             </Link>
-            <Link to="/trending" className="text-primary-foreground hover:text-orange-200 transition-colors font-medium whitespace-nowrap hover:scale-105 transform duration-200">
+            <Link to="/trending" className={navLinkClasses}>
               Trending
             </Link>
-            <Link to="/shop?category=beauty" className="text-primary-foreground hover:text-orange-200 transition-colors font-medium whitespace-nowrap hover:scale-105 transform duration-200">
+            <Link to="/shop?category=beauty" className={navLinkClasses}>
               Shop by Brand
             </Link>
           </nav>
@@ -60,7 +83,7 @@ const Header = () => {
             {/* User Actions */}
             <div className="flex items-center gap-1">
               <Link to="/wishlist">
-                <Button variant="ghost" size="icon" className="text-primary-foreground hover:bg-primary-glow/20 relative h-9 w-9">
+                <Button variant="ghost" size="icon" className={iconButtonClasses}>
                   <Heart className="h-5 w-5" />
                   {wishlistCount > 0 && (
                     <span className="absolute -top-1 -right-1 bg-secondary text-secondary-foreground text-xs rounded-full h-4 w-4 flex items-center justify-center text-[10px] animate-bounce-gentle">
@@ -71,7 +94,7 @@ const Header = () => {
               </Link>
               
               <Link to="/cart">
-                <Button variant="ghost" size="icon" className="text-primary-foreground hover:bg-primary-glow/20 relative h-9 w-9">
+                <Button variant="ghost" size="icon" className={iconButtonClasses}>
                   <ShoppingCart className="h-5 w-5" />
                   <span className="absolute -top-1 -right-1 bg-secondary text-secondary-foreground text-xs rounded-full h-4 w-4 flex items-center justify-center text-[10px]">
                     {cartItems.length}
@@ -80,7 +103,7 @@ const Header = () => {
               </Link>
               
               <Link to="/account">
-                <Button variant="ghost" size="icon" className="text-primary-foreground hover:bg-primary-glow/20 h-9 w-9">
+                <Button variant="ghost" size="icon" className={iconButtonClasses}>
                   <User className="h-5 w-5" />
                 </Button>
               </Link>
