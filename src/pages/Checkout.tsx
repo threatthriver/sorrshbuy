@@ -147,7 +147,7 @@ const Checkout = () => {
 };
 
 // Shipping Form Component
-const ShippingForm = ({ form, onSubmit }: { form: any, onSubmit: (data: any) => void }) => (
+const ShippingForm = ({ form, onSubmit }: { form: ReturnType<typeof useForm<z.infer<typeof shippingSchema>>>, onSubmit: (data: z.infer<typeof shippingSchema>) => void }) => (
   <Form {...form}>
     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
       <h2 className="text-2xl font-semibold text-foreground">Shipping Information</h2>
@@ -171,7 +171,7 @@ const ShippingForm = ({ form, onSubmit }: { form: any, onSubmit: (data: any) => 
 );
 
 // Payment Form Component
-const PaymentForm = ({ form, onSubmit, onBack }: { form: any, onSubmit: (data: any) => void, onBack: () => void }) => (
+const PaymentForm = ({ form, onSubmit, onBack }: { form: ReturnType<typeof useForm<z.infer<typeof paymentSchema>>>, onSubmit: (data: z.infer<typeof paymentSchema>) => void, onBack: () => void }) => (
   <Form {...form}>
     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
       <h2 className="text-2xl font-semibold text-foreground">Payment Details</h2>
@@ -190,7 +190,7 @@ const PaymentForm = ({ form, onSubmit, onBack }: { form: any, onSubmit: (data: a
 );
 
 // Review Step Component
-const ReviewStep = ({ onBack, shippingData, paymentData }: { onBack: () => void, shippingData: any, paymentData: any }) => (
+const ReviewStep = ({ onBack, shippingData, paymentData }: { onBack: () => void, shippingData: z.infer<typeof shippingSchema>, paymentData: z.infer<typeof paymentSchema> }) => (
   <div className="space-y-6">
     <h2 className="text-2xl font-semibold text-foreground">Review Your Order</h2>
     <div className="space-y-4">

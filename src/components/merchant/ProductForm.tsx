@@ -49,7 +49,7 @@ interface ProductFormProps {
 
 export function ProductForm({ initialData, onSubmit, isSaving }: ProductFormProps) {
   const form = useForm<ProductFormValues>({
-    resolver: zodResolver(productFormSchema) as any,
+    resolver: zodResolver(productFormSchema),
     defaultValues: initialData
       ? { ...initialData, price: initialData.price ?? undefined, stock: initialData.stock ?? undefined }
       : {
@@ -65,7 +65,7 @@ export function ProductForm({ initialData, onSubmit, isSaving }: ProductFormProp
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit as any)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-8">
             <Card>

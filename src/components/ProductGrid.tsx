@@ -13,7 +13,7 @@ import { cn } from '@/lib/utils';
 const ProductGrid = () => {
   const [activeTab, setActiveTab] = useState('New Arrivals');
   // Sample product data
-  const products: Product[] = [
+  const products: Product[] = useMemo(() => [
     {
       id: "1",
       name: "Latest Smartphone Pro Max",
@@ -93,7 +93,7 @@ const ProductGrid = () => {
       reviews: 2108,
       isNew: true
     }
-  ];
+  ], []);
 
   const filteredProducts = useMemo(() => {
     const allProducts = [...products, ...products].map((p, i) => ({ ...p, id: `${p.id}-${i}` })); // Double the products for better filtering demo
@@ -107,7 +107,7 @@ const ProductGrid = () => {
       default:
         return allProducts.filter(p => p.isNew).slice(0, 4);
     }
-  }, [activeTab]);
+  }, [activeTab, products]);
 
   const tabs = ['New Arrivals', 'Best Sellers', 'Top Rated'];
 

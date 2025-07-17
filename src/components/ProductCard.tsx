@@ -50,7 +50,7 @@ const ProductCard = (product: ProductCardProps) => {
 
   return (
     <div className="relative group text-sm flex flex-col h-full">
-      <div className="relative overflow-hidden aspect-[4/5] rounded-lg">
+      <div className="relative overflow-hidden aspect-[4/5] rounded-lg bg-gradient-to-br from-muted via-background to-muted/50">
         <Link to={`/product/${id}`} className="cursor-pointer">
           <img
             src={image}
@@ -65,10 +65,13 @@ const ProductCard = (product: ProductCardProps) => {
         {/* Badges */}
         <div className="absolute top-3 left-3 flex flex-col gap-2">
           {isNew && (
-            <Badge className="text-xs font-semibold bg-primary text-primary-foreground">NEW</Badge>
+            <Badge className="text-xs font-semibold bg-gradient-to-r from-emerald to-success text-white shadow-lg">NEW</Badge>
           )}
           {discount > 0 && (
-            <Badge variant="destructive">-{discount}%</Badge>
+            <Badge className="text-xs font-semibold bg-gradient-to-r from-secondary to-amber text-white shadow-lg">-{discount}%</Badge>
+          )}
+          {badge && (
+            <Badge className="text-xs font-semibold bg-gradient-to-r from-violet to-pink text-white shadow-lg">{badge}</Badge>
           )}
         </div>
 
@@ -107,7 +110,7 @@ const ProductCard = (product: ProductCardProps) => {
         </div>
 
         <div className="mt-auto pt-4">
-          <Button onClick={handleAddToCart} className="w-full" disabled={isLoading} aria-label="Add to cart">
+          <Button onClick={handleAddToCart} className="w-full bg-gradient-to-r from-primary to-primary-glow hover:from-primary/90 hover:to-primary-glow/90 text-white font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl" disabled={isLoading} aria-label="Add to cart">
             <ShoppingCart className="mr-2 h-4 w-4" /> Add to Cart
           </Button>
         </div>

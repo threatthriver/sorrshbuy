@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -62,16 +62,16 @@ const HeroCarousel = () => {
     },
   };
 
-  const paginate = (newDirection: number) => {
+  const paginate = useCallback((newDirection: number) => {
     setCurrentSlide([currentSlide + newDirection, newDirection]);
-  };
+  }, [currentSlide]);
 
   const activeSlideIndex = ((currentSlide % slides.length) + slides.length) % slides.length;
 
   useEffect(() => {
     const timer = setTimeout(() => paginate(1), 5000);
     return () => clearTimeout(timer);
-  }, [currentSlide]);
+  }, [currentSlide, paginate]);
 
   const slide = slides[activeSlideIndex];
 
@@ -109,7 +109,7 @@ const HeroCarousel = () => {
             {slide.description}
           </motion.p>
           <motion.div variants={contentVariants} initial="initial" animate="animate" transition={{ delay: 0.3 }}>
-            <Button size="lg" className="bg-secondary hover:bg-secondary/90 text-secondary-foreground font-semibold px-8 py-3 shadow-glow">
+            <Button size="lg" className="bg-gradient-to-r from-secondary to-amber hover:from-secondary/90 hover:to-amber/90 text-white font-semibold px-8 py-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
               {slide.buttonText}
             </Button>
           </motion.div>
@@ -121,17 +121,17 @@ const HeroCarousel = () => {
         variant="ghost"
         size="icon"
         onClick={() => paginate(-1)}
-        className="absolute z-20 left-4 top-1/2 -translate-y-1/2 bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white h-10 w-10 rounded-full transition-colors duration-300"
+        className="absolute z-20 left-4 top-1/2 -translate-y-1/2 bg-white/10 backdrop-blur-sm hover:bg-primary/20 text-white h-12 w-12 rounded-full transition-all duration-300 hover:scale-110 border border-white/20 hover:border-primary/30"
       >
-        <ChevronLeft />
+        <ChevronLeft className="h-6 w-6" />
       </Button>
       <Button
         variant="ghost"
         size="icon"
         onClick={() => paginate(1)}
-        className="absolute z-20 right-4 top-1/2 -translate-y-1/2 bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white h-10 w-10 rounded-full transition-colors duration-300"
+        className="absolute z-20 right-4 top-1/2 -translate-y-1/2 bg-white/10 backdrop-blur-sm hover:bg-primary/20 text-white h-12 w-12 rounded-full transition-all duration-300 hover:scale-110 border border-white/20 hover:border-primary/30"
       >
-        <ChevronRight />
+        <ChevronRight className="h-6 w-6" />
       </Button>
 
       {/* Pagination & Progress */}
@@ -141,14 +141,14 @@ const HeroCarousel = () => {
             <button
               key={index}
               onClick={() => setCurrentSlide([index, index > activeSlideIndex ? 1 : -1])}
-              className={`w-2 h-2 rounded-full transition-all duration-300 ${activeSlideIndex === index ? 'bg-white scale-125' : 'bg-white/50'}`}
+              className={`w-3 h-3 rounded-full transition-all duration-300 ${activeSlideIndex === index ? 'bg-secondary scale-125 shadow-lg' : 'bg-white/50 hover:bg-white/80'}`}
             />
           ))}
         </div>
         <div className="w-32 h-1 bg-white/20 rounded-full overflow-hidden">
             <motion.div 
               key={activeSlideIndex}
-              className="h-full bg-white"
+              className="h-full bg-gradient-to-r from-secondary to-amber"
               initial={{ width: '0%' }}
               animate={{ width: '100%' }}
               transition={{ duration: 5, ease: 'linear' }}

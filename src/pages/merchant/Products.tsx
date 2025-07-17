@@ -183,7 +183,7 @@ const Products = () => {
           </Button>
         </div>
       </div>
-      <Tabs defaultValue="all" onValueChange={(value) => setActiveTab(value as any)}>
+      <Tabs defaultValue="all" onValueChange={(value) => setActiveTab(value as ProductStatus | 'all')}>
         <TabsList>
           <TabsTrigger value="all">All</TabsTrigger>
           <TabsTrigger value="active">Active</TabsTrigger>

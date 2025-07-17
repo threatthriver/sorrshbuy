@@ -43,7 +43,7 @@ const Account = () => {
     { id: 3, message: "Profile updated successfully", time: "3 days ago", read: true },
   ]);
 
-  const handleProfileChange = (data: any) => {
+  const handleProfileChange = (data: typeof profile) => {
     setProfile(data);
   };
 

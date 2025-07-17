@@ -36,13 +36,13 @@ const Header = () => {
     }
   };
 
-  const headerClasses = `sticky top-0 z-50 transition-all duration-300 bg-background/95 backdrop-blur-sm shadow-md border-b border-border/20`;
+  const headerClasses = `sticky top-0 z-50 h-[65px] transition-all duration-300 bg-background/95 backdrop-blur-sm shadow-lg border-b border-border/30`;
 
-  const navLinkClasses = `transition-colors font-medium whitespace-nowrap hover:scale-105 transform duration-200 text-foreground hover:text-primary`;
+  const navLinkClasses = `transition-colors font-medium whitespace-nowrap hover:scale-105 transform duration-200 text-foreground hover:text-primary relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-gradient-to-r after:from-primary after:to-primary-glow after:transition-all after:duration-300 hover:after:w-full`;
 
-  const logoClasses = `text-2xl font-bold bg-clip-text text-transparent hover:scale-105 transition-transform cursor-pointer bg-gradient-to-r from-primary to-orange-500`;
+  const logoClasses = `text-2xl font-bold text-orange-500 hover:scale-105 transition-transform cursor-pointer hover:text-orange-600`;
 
-  const iconButtonClasses = `relative h-9 w-9 transition-colors text-foreground hover:bg-muted`;
+  const iconButtonClasses = `relative h-9 w-9 transition-all duration-200 text-foreground hover:bg-muted hover:scale-110`;
 
   return (
     <header className={headerClasses}>
@@ -86,7 +86,7 @@ const Header = () => {
                 <Button variant="ghost" size="icon" className={iconButtonClasses}>
                   <Heart className="h-5 w-5" />
                   {wishlistCount > 0 && (
-                    <span className="absolute -top-1 -right-1 bg-secondary text-secondary-foreground text-xs rounded-full h-4 w-4 flex items-center justify-center text-[10px] animate-bounce-gentle">
+                    <span className="absolute -top-1 -right-1 bg-gradient-to-r from-pink to-secondary text-white text-xs rounded-full h-4 w-4 flex items-center justify-center text-[10px] animate-bounce-gentle shadow-lg">
                       {wishlistCount}
                     </span>
                   )}
@@ -96,7 +96,7 @@ const Header = () => {
               <Link to="/cart">
                 <Button variant="ghost" size="icon" className={iconButtonClasses}>
                   <ShoppingCart className="h-5 w-5" />
-                  <span className="absolute -top-1 -right-1 bg-secondary text-secondary-foreground text-xs rounded-full h-4 w-4 flex items-center justify-center text-[10px]">
+                  <span className="absolute -top-1 -right-1 bg-gradient-to-r from-primary to-primary-glow text-white text-xs rounded-full h-4 w-4 flex items-center justify-center text-[10px] shadow-lg">
                     {cartItems.length}
                   </span>
                 </Button>
