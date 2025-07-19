@@ -3,7 +3,7 @@
 ## 🌟 Project Overview
 SorrshaBuy is a modern, full-featured e-commerce platform built with React, TypeScript, and shadcn-ui. The platform features a vibrant, responsive design with enhanced user experience, merchant tools, and a comprehensive design system.
 
-![SorrshaBuy Screenshot](<img width="1600" height="1000" alt="image" src="https://github.com/user-attachments/assets/2d6d0a0b-3a05-4eb9-801b-17ed48bae23c" />)
+<img width="1600" height="1000" alt="image" src="https://github.com/user-attachments/assets/2d6d0a0b-3a05-4eb9-801b-17ed48bae23c" />
 
 ## ✨ Key Features
 
