@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { SectionTitle } from "./ui/Section";
 
 const CategorySection = () => {
   const categories = [
@@ -68,42 +69,42 @@ const CategorySection = () => {
   return (
     <section className="py-16 bg-gray-100">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
-            Shop by Category
-          </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Discover amazing products across all categories with unbeatable prices
-          </p>
-        </div>
-
-        <motion.div 
-          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6"
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.2 }}
-        >
-          {categories.map((category) => (
-            <motion.div key={category.id} variants={itemVariants}>
-              <Link 
-                to={`/shop?category=${category.name.toLowerCase().replace(' & ', '-')}`}
-                className="group relative rounded-lg overflow-hidden shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 block h-48"
+        <div className="w-full">
+          <SectionTitle>Shop by Category</SectionTitle>
+          <motion.div 
+            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-6 max-w-7xl mx-auto"
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+          >
+            <AnimatePresence>
+            {categories.map((category) => (
+              <motion.div
+                key={category.id}
+                variants={itemVariants}
+                className="group relative overflow-hidden rounded-2xl aspect-square shadow-md hover:shadow-xl transition-all duration-300"
+                whileHover={{ y: -5 }}
               >
-                <img
-                  src={category.image}
-                  alt={category.name}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent" />
-                <div className="absolute inset-0 p-4 flex flex-col justify-end text-white">
-                  <h3 className="text-xl font-bold">{category.name}</h3>
-                  <p className="text-sm text-white/90">{category.itemCount}</p>
-                </div>
-              </Link>
-            </motion.div>
-          ))}
-        </motion.div>
+                <Link to={`/shop?category=${category.name.toLowerCase()}`} className="block h-full w-full">
+                  <div className={`absolute inset-0 bg-gradient-to-br from-black/20 via-black/10 to-transparent opacity-90 transition-opacity group-hover:opacity-100 z-10`} />
+                  <img
+                    src={category.image}
+                    alt={category.name}
+                    className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 flex flex-col justify-end p-4 z-20">
+                    <h3 className="text-white font-bold text-lg md:text-xl drop-shadow-lg">{category.name}</h3>
+                    <p className="text-white/90 text-sm md:text-base drop-shadow-md">{category.itemCount}</p>
+                  </div>
+                  <div className={`absolute inset-0 bg-gradient-to-br ${category.color} opacity-0 group-hover:opacity-20 transition-opacity duration-300 z-10`} />
+                </Link>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+          </motion.div>
+        </div>
       </div>
     </section>
   );

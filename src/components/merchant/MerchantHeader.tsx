@@ -24,22 +24,51 @@ const MerchantHeader = ({ onMenuClick }: MerchantHeaderProps) => {
   const toggleSearch = () => setIsSearchVisible(!isSearchVisible);
 
   return (
-    <header className="flex items-center justify-between h-[65px] px-4 bg-card border-b shrink-0">
-      <div className="flex items-center gap-2">
-        <Button variant="ghost" size="icon" className="md:hidden" onClick={onMenuClick}>
+    <header className="flex items-center justify-between h-[65px] px-4 bg-card dark:bg-card border-b dark:border-gray-800 shrink-0 sticky top-0 z-40">
+      <div className="flex items-center gap-4">
+        <Button variant="ghost" size="icon" className="md:hidden" onClick={onMenuClick} aria-label="Toggle menu">
           <Menu className="h-6 w-6" />
-          <span className="sr-only">Toggle Menu</span>
         </Button>
-        <Button variant="ghost" size="icon" className="md:hidden" onClick={toggleSearch}>
+        
+        {/* Search toggle button for mobile */}
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          className="md:hidden" 
+          onClick={toggleSearch}
+          aria-label="Search"
+        >
           <Search className="h-5 w-5" />
-           <span className="sr-only">Toggle Search</span>
         </Button>
-        <div className={cn("relative hidden md:block", isSearchVisible && "!block")}>
-           <div className={cn("absolute md:hidden top-0 left-0 bg-background/80 backdrop-blur-sm w-full h-full z-10", !isSearchVisible && "hidden")} onClick={toggleSearch}></div>
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground z-20" />
-          <Input placeholder="Search products, orders..." className="pl-10 w-64 md:w-80 z-20 relative" />
+
+        {/* Search bar */}
+        <div className={cn(
+          "absolute left-0 right-0 top-[65px] md:relative md:top-0",
+          "bg-background md:bg-transparent transition-all duration-200 ease-in-out",
+          isSearchVisible ? "block" : "hidden md:block"
+        )}>
+          <div className="container mx-auto px-4 py-2 md:py-0 md:px-0 md:block">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground dark:text-muted-foreground/80" />
+              <Input 
+                placeholder="Search products, orders..." 
+                className="pl-10 w-full md:w-80 bg-background dark:bg-card border-gray-200 dark:border-gray-700 focus-visible:ring-primary/50"
+                autoFocus={isSearchVisible}
+              />
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="absolute right-1 top-1/2 -translate-y-1/2 md:hidden"
+                onClick={toggleSearch}
+                aria-label="Close search"
+              >
+                <span className="text-muted-foreground">×</span>
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
+      
       <div className="flex items-center gap-2">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -48,10 +77,10 @@ const MerchantHeader = ({ onMenuClick }: MerchantHeaderProps) => {
               <span className="sr-only">Notifications</span>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-80">
-            <DropdownMenuLabel>Notifications</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <div className="p-2 text-sm text-center text-muted-foreground">
+          <DropdownMenuContent align="end" className="w-80 bg-background dark:bg-card border-gray-200 dark:border-gray-700">
+            <DropdownMenuLabel className="font-semibold">Notifications</DropdownMenuLabel>
+            <DropdownMenuSeparator className="bg-gray-200 dark:bg-gray-700" />
+            <div className="p-4 text-sm text-center text-muted-foreground dark:text-muted-foreground/80">
               No new notifications
             </div>
             {/* Example Notification Item */}

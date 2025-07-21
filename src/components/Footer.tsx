@@ -21,7 +21,6 @@ const Footer = () => {
   ];
 
   const corporateLinks = [
-    { title: "Sell With Us", href: "/merchant" },
     { title: "Careers", href: "/careers" },
     { title: "Blog", href: "/blog" },
     { title: "Contact Us", href: "/contact" }
@@ -115,7 +114,7 @@ const Footer = () => {
             <ul className="space-y-3">
               {policyLinks.map((link, index) => (
                 <li key={index}>
-                  <a href={link.href} className="text-muted-foreground hover:text-primary transition-colors text-sm">
+                  <a href={link.href} className="text-muted-foreground hover:text-primary underline-offset-4 hover:underline transition-colors text-sm">
                     {link.title}
                   </a>
                 </li>
@@ -131,7 +130,7 @@ const Footer = () => {
             <ul className="space-y-3">
               {helpLinks.map((link, index) => (
                 <li key={index}>
-                  <a href={link.href} className="text-muted-foreground hover:text-primary transition-colors text-sm">
+                  <a href={link.href} className="text-muted-foreground hover:text-primary underline-offset-4 hover:underline transition-colors text-sm">
                     {link.title}
                   </a>
                 </li>
@@ -141,19 +140,28 @@ const Footer = () => {
 
           {/* Corporate */}
           <div>
-            <h3 className="text-lg font-semibold mb-6 text-foreground">
-              Corporate
-            </h3>
-            <ul className="space-y-3">
-              {corporateLinks.map((link, index) => (
-                <li key={index}>
-                  <a href={link.href} className="text-muted-foreground hover:text-primary transition-colors text-sm">
-                    {link.title}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
+  <Button asChild className="mb-6 w-full max-w-xs mx-auto">
+  <a href="/merchant" className="flex items-center gap-2">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" className="mr-2 h-5 w-5">
+      <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+      <path d="M9 22V12h6v10" />
+    </svg>
+    Sell With Us
+  </a>
+</Button>
+  <h3 className="text-lg font-semibold mb-6 text-foreground">
+    Corporate
+  </h3>
+  <ul className="space-y-3">
+    {corporateLinks.map((link, index) => (
+      <li key={index}>
+        <a href={link.href} className="text-muted-foreground hover:text-primary underline-offset-4 hover:underline transition-colors text-sm">
+          {link.title}
+        </a>
+      </li>
+    ))}
+  </ul>
+</div>
         </div>
       </div>
 

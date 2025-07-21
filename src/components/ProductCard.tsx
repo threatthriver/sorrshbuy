@@ -63,15 +63,39 @@ const ProductCard = (product: ProductCardProps) => {
           />
         </Link>
         {/* Badges */}
-        <div className="absolute top-3 left-3 flex flex-col gap-2">
+        <div className="absolute top-3 left-3 flex flex-col gap-2 z-10">
           {isNew && (
-            <Badge className="text-xs font-semibold bg-gradient-to-r from-emerald to-success text-white shadow-lg">NEW</Badge>
+            <Badge 
+              className={cn(
+                "text-xs font-semibold bg-gradient-to-r from-orange-500 to-amber-400 text-white shadow-lg",
+                "hover:shadow-orange-300/40 transition-all hover:scale-105",
+                "border border-orange-300/30"
+              )}
+            >
+              NEW
+            </Badge>
           )}
           {discount > 0 && (
-            <Badge className="text-xs font-semibold bg-gradient-to-r from-secondary to-amber text-white shadow-lg">-{discount}%</Badge>
+            <Badge 
+              className={cn(
+                "text-xs font-semibold bg-gradient-to-r from-orange-500 to-pink-500 text-white shadow-lg",
+                "hover:shadow-pink-300/40 transition-all hover:scale-105",
+                "border border-pink-300/30"
+              )}
+            >
+              -{discount}%
+            </Badge>
           )}
-          {badge && (
-            <Badge className="text-xs font-semibold bg-gradient-to-r from-violet to-pink text-white shadow-lg">{badge}</Badge>
+          {badge && !isNew && discount <= 0 && (
+            <Badge 
+              className={cn(
+                "text-xs font-semibold bg-gradient-to-r from-orange-500 to-amber-400 text-white shadow-lg",
+                "hover:shadow-orange-300/40 transition-all hover:scale-105",
+                "border border-orange-300/30"
+              )}
+            >
+              {badge}
+            </Badge>
           )}
         </div>
 
